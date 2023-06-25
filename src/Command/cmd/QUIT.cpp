@@ -12,9 +12,9 @@ void CmdManager::send_quit_msg(Client&sender, const Command &cmd)
 
 void CmdManager::quit(Client&client, const Command &cmd)
 {
-	if (!require_authed(client)) return;
-	if (!require_nick_user(client)) return;
-	if (!require_enough_params(client, cmd, 0, 1)) return ;
+	if (!require_authed(client) && !require_nick_user(client) && \
+		!require_enough_params(client, cmd, 0, 1))
+		return;
 	
 	send_quit_msg(client, cmd);
 	clientManager.deleteClient(client, channelManager);

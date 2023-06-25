@@ -1,6 +1,7 @@
 #ifndef CMD_MANAGER_HPP
 # define CMD_MANAGER_HPP
 
+# include <sstream>
 # include "ClientManager.hpp"
 # include "ChannelManager.hpp"
  
@@ -68,9 +69,8 @@ class CmdManager
 		bool require_authed(Client &client);
 		bool require_nick_user(Client &client);
 
-		// std::vector<std::string> ft_split(const std::string& s, const std::vector<std::string>& t);
-		// std::vector<std::string> ft_split(const std::string& s, const std::string& t);
-		// std::vector<std::string> splitByLines(const std::string& s);
+		void plus_option(Channel &channel, Client &sender, const Command &cmd);
+		void minus_option(Channel &channel, Client &sender, const Command &cmd);
 };
 
 std::vector<std::string> ft_split(const std::string& s, const std::vector<std::string>& t);

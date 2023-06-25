@@ -1,5 +1,5 @@
 #include "../../../include/CmdManager.hpp"
-#include "Mode.hpp"
+#include "../../../include/Mode.hpp"
 
 void CmdManager::mode_i(Channel &channel, Client &sender, const Command &cmd)
 {
@@ -90,30 +90,8 @@ void CmdManager::mode_l(Channel &channel, Client &sender, const Command &cmd)
 
 void CmdManager::mode_state(Channel &channel, Client &sender)
 {
-	std::string mode = channel.get_mode();
-	reply(sender, RPL_CHANNELMODEIS(sender, channel, mode, ""));
+	reply(sender, RPL_CHANNELMODEIS(sender, channel, channel.get_mode(), ""));
 }
-
-// void ft_1(std::vector<std::string> params, int i)
-// {
-// 	for (int i = 1; params[1].length(); i ++)
-// 	{
-// 		switch(i)
-// 		{
-// 			case 'i':		break;  
-// 		}
-// 	}	
-// }
-// void ft_2(std::vector<std::string> params, int i)
-// {
-// 	for (int i = 1; params[1].length(); i ++)
-// 	{
-// 		switch(i)
-// 		{
-// 			case 'i':		break;  
-// 		}
-// 	}	
-// }
 
 void CmdManager::mode(Client &sender, const Command &cmd)
 {
@@ -124,27 +102,35 @@ void CmdManager::mode(Client &sender, const Command &cmd)
 	if (!channelManager.require_exist_channel(sender, cmd._parameters[0])) return;
 
 	Channel &channel = channelManager.get_channel(cmd._parameters[0]);
-	// if (!channel.require_operator(sender)) return;
-
-
-	// if (cmd._parameters[1][0] == '+')
-	// 	ft_1(cmd._parameters, true);
-	// else if (cmd._parameters[1][0] == '-')
-	// 	ft_2(cmd._parameters, false);
 
 	if (cmd._parameters.size() == 1)
 		mode_state(channel, sender);
-	else if (is_mode_i(cmd))
-		mode_i(channel, sender, cmd);
-	else if (is_mode_o(cmd))
-		mode_o(channel, sender, cmd);
-	else if (is_mode_t(cmd))
-		mode_t(channel, sender, cmd);
-	else if (is_mode_k(cmd))
-		mode_k(channel, sender, cmd);
-	else if (is_mode_l(cmd))
-		mode_l(channel, sender, cmd);
-	else
-		reply(sender, ERR_NOCHANMODES(sender, get_flag(cmd)));
+
+	if (cmd._parameters[1][0] == '+')
+		plus_option(channel, sender, cmd);
+	else if (cmd._parameters[1][0] == '-')
+		minus_option(channel, sender, cmd);
+
+	// if (cmd._parameters.size() >= 3)
+	// {
+	// 	if (cmd._parameters[2][0] == '+')
+	// 		plus_option(channel, sender, cmd);
+	// 	else if (cmd._parameters[2][0] == '-')
+	// 		minus_option(channel, sender, cmd);
+	// 	else
+	// 		reply(sender, ERR_NOCHANMODES(sender, get_flag(cmd)));
+	// }
+	// if (cmd._parameters.size() == 1)
+	// 	mode_state(channel, sender);
+	// else if (is_mode_i(cmd))
+	// 	mode_i(channel, sender, cmd);
+	// else if (is_mode_o(cmd))
+	// 	mode_o(channel, sender, cmd);
+	// else if (is_mode_t(cmd))
+	// 	mode_t(channel, sender, cmd);
+	// else if (is_mode_k(cmd))
+	// 	mode_k(channel, sender, cmd);
+	// else if (is_mode_l(cmd))
+	// 	mode_l(channel, sender, cmd);
 }
 // MODE #channel option [target_user]
