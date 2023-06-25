@@ -98,7 +98,9 @@ void CmdManager::mode(Client &sender, const Command &cmd)
 	if (!require_authed(sender)) return;
 	if (!require_nick_user(sender)) return;
 	if (!require_enough_params(sender, cmd, 1)) return;
-	if (!channelManager.is_valid_channel_name(cmd._parameters[0])) return;
+	if (cmd._parameters[0] == "" || cmd._parameters[0] != "#" || cmd._parameters[0] == "#")
+		return; 
+	
 	if (!channelManager.require_exist_channel(sender, cmd._parameters[0])) return;
 
 	Channel &channel = channelManager.get_channel(cmd._parameters[0]);

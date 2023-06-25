@@ -38,13 +38,13 @@ public:
 	void cmd_reply_to_same_channel(Client &sender, const Command &cmd);
 	
 	//*** 추가
-	// void broadcastToChannel(const Command& cmd, Client &sender, const std::string &channel_name); //채널에 전체 메시지 보내기
+	void broadcastToChannel(const Command& cmd, Client &sender, const std::string &channel_name); //채널에 전체 메시지 보내기
 	
 	// *** 삭제
-	void names_channel(Client &client, const Command& cmd);
- 	void names_all(const Client &sender, std::set<Client> all_clients);
-	void privmsg_to_channel(const Command& cmd, Client &sender, const std::string &channel_name);//broadcastToChannel로 전체 변경
-	void notice_to_channel(const Command& cmd, Client &sender, const std::string &channel_name);//broadcastToChannel로 전체 변경
-	bool is_valid_channel_name(const std::string & channel_name);//command에서 사용하는 거 변경하면 삭제가능
+	// void names_channel(Client &client, const Command& cmd);
+ 	// void names_all(const Client &sender, std::set<Client> all_clients);
+	// void broadcastToChannel(const Command& cmd, Client &sender, const std::string &channel_name);//broadcastToChannel로 전체 변경
+	// void broadcastToChannel(const Command& cmd, Client &sender, const std::string &channel_name);//broadcastToChannel로 전체 변경
+	// bool is_valid_channel_name(const std::string & channel_name);//command에서 사용하는 거 변경하면 삭제가능
 };
 #endif

@@ -54,7 +54,8 @@ int main(int argc, char **argv)
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
-		server->close_all_fd();
+		if (server)
+			server->close_all_fd();
 		return (1);
 	}
 	return (0);

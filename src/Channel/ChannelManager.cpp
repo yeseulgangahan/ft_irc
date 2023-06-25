@@ -89,18 +89,11 @@ bool ChannelManager::require_exist_channel(Client &client, const std::string & c
 	return true;
 }
 
-// *** broadcastToChannel 로 이름 변경
-void ChannelManager::privmsg_to_channel(const Command &cmd, Client &sender, const std::string &channel_name)
+void ChannelManager::broadcastToChannel(const Command &cmd, Client &sender, const std::string &channel_name)
 {
 	if (!require_exist_channel(sender, channel_name))
 		return;
 	get_channel(channel_name).broadcastExceptSender(sender,  REP_CMD(sender, cmd));
-}
-
-//*** 삭제
-bool ChannelManager::is_valid_channel_name(const std::string & channel_name)
-{
-	return !(channel_name == "" || channel_name[0] != '#' || channel_name == "#");
 }
 
 
