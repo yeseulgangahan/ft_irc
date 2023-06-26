@@ -117,41 +117,61 @@ bool CmdManager::requireEnoughParams(Client &sender, const Command& cmd, size_t 
 
 void CmdManager::plusOption(Channel &channel, Client &sender, const Command &cmd)
 {
-
+	int no_arg = 0;
 	for (size_t i = 1; i < cmd._parameters[1].size(); i ++)
 	{
 		switch (cmd._parameters[1][i])
 		{
-			case 'i':	channel.modeInvite(cmd, sender, true);				break;
+			case 'i':
+						no_arg++;
+						channel.modeInvite(cmd, sender, true);				break;
 			case 'o':	
 						if (!requireEnoughParams(sender, cmd, 3, 6))
 							return;
-						if (!clientManager.requireExistNick(sender, cmd._parameters[2]))
+
+						if (no_arg && !clientManager.requireExistNick(sender, \
+							cmd._parameters[1 + i - no_arg]))
 							return;
-						channel.modeOperator(cmd, sender, true, \
-						clientManager.getClientByNick(cmd._parameters[2]));
+						else if (!clientManager.requireExistNick(sender, \
+								cmd._parameters[1 + i]))
+							return;
+							
+						if (no_arg)
+							channel.modeOperator(cmd, sender, true, \
+							clientManager.getClientByNick(cmd._parameters[1 + i - no_arg]));
+						else
+							channel.modeOperator(cmd, sender, true, \
+							clientManager.getClientByNick(cmd._parameters[1 + i]));
 																		break;
 			case 't':
+						no_arg++;
 						if (!requireEnoughParams(sender, cmd, 2, 6))
 							return;
 						channel.modeTopic(cmd, sender, true);				break;
 
 			case 'k':
-						if (!requireEnoughParams(sender, cmd, 2, 6))
+						if (!requireEnoughParams(sender, cmd, 2, 6) && \
+							!requireEnoughParams(sender, cmd, 3, 6))
 							return;
-						if (!requireEnoughParams(sender, cmd, 3, 6))
-							return;
-						// cmd._parameters.
-						channel.modeKeyAdd(cmd, sender, cmd._parameters[2]);
+
+						if (no_arg)
+							channel.modeKeyAdd(cmd, sender, cmd._parameters[1 + i - no_arg]);
+						else
+							channel.modeKeyAdd(cmd, sender, cmd._parameters[1 + i]);
 																		break;
 			case 'l':
-						if (!requireEnoughParams(sender, cmd, 2, 6))
+						if (!requireEnoughParams(sender, cmd, 2, 6) && \
+							!requireEnoughParams(sender, cmd, 3, 6))
 							return;
-						if (!requireEnoughParams(sender, cmd, 3, 6))
-							return;
-						channel.modeLimitAdd(cmd, sender, cmd._parameters[2]);
+
+						if (no_arg)
+							channel.modeLimitAdd(cmd, sender, cmd._parameters[1 + i - no_arg]);
+						else
+							channel.modeLimitAdd(cmd, sender, cmd._parameters[1 + i]);
+
 																		break;
-			default :	break;
+			default :	no_arg++;
+						break;
 		}
 	}	
 }
