@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <sstream>
 #include "Client.hpp"
 #include "Message.hpp"
 #include "Command.hpp"
@@ -52,7 +53,7 @@ public:
     const std::set<Client>& getMembers() const;
 
     //변형된 결과 getter
-    std::string getModeString() const;
+    std::string getModeString();
     std::string getMembershipString(const Client&client) const;
     bool isMember(const Client& target) const;
     

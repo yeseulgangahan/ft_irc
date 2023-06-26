@@ -90,18 +90,22 @@ void CmdManager::modeLimit(Channel &channel, Client &sender, const Command &cmd)
 
 void CmdManager::modeState(Channel &channel, Client &sender)
 {
-	reply(sender, RPL_CHANNELMODEIS(sender, channel, channel.getModeString(), ""));
+	reply(sender, RPL_CHANNELMODEIS(sender, channel, channel. getModeString(), ""));
 }
 
 void CmdManager::mode(Client &sender, const Command &cmd)
 {
-	if (!requireAuthed(sender)) return;
-	if (!requireNickUser(sender)) return;
-	if (!requireEnoughParams(sender, cmd, 1)) return;
-	if (cmd._parameters[0] == "" || cmd._parameters[0] != "#" || cmd._parameters[0] == "#")
+	if (!requireAuthed(sender))
+		return;
+	if (!requireNickUser(sender))
+		return;
+	if (!requireEnoughParams(sender, cmd, 1))
+		return;
+	if (cmd._parameters[0] == "" || cmd._parameters[0][0] != '#' || cmd._parameters[0] == "#")
 		return; 
 	
-	if (!channelManager.requireExistChannel(sender, cmd._parameters[0])) return;
+	if (!channelManager.requireExistChannel(sender, cmd._parameters[0]))
+		return;
 
 	Channel &channel = channelManager.getChannel(cmd._parameters[0]);
 
@@ -113,26 +117,5 @@ void CmdManager::mode(Client &sender, const Command &cmd)
 	else if (cmd._parameters[1][0] == '-')
 		minusOption(channel, sender, cmd);
 
-	// if (cmd._parameters.size() >= 3)
-	// {
-	// 	if (cmd._parameters[2][0] == '+')
-	// 		plusOption(channel, sender, cmd);
-	// 	else if (cmd._parameters[2][0] == '-')
-	// 		minusOption(channel, sender, cmd);
-	// 	else
-	// 		reply(sender, ERR_NOCHANMODES(sender, getFlag(cmd)));
-	// }
-	// if (cmd._parameters.size() == 1)
-	// 	modeState(channel, sender);
-	// else if (is_modeInvite(cmd))
-	// 	modeInvite(channel, sender, cmd);
-	// else if (is_modeOperator(cmd))
-	// 	modeOperator(channel, sender, cmd);
-	// else if (is_modeTopic(cmd))
-	// 	modeTopic(channel, sender, cmd);
-	// else if (is_modeKey(cmd))
-	// 	modeKey(channel, sender, cmd);
-	// else if (is_modeInvite(cmd))
-	// 	modeInvite(channel, sender, cmd);
 }
 // MODE #channel option [target_user]

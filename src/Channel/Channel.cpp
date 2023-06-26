@@ -71,21 +71,48 @@ const std::set<Client>& Channel::getMembers() const
     return _members;
 }
 
-std::string Channel::getModeString() const
+std::string Channel::getModeString()
 {
     std::string mode = "+";
+    std::stringstream ss;
+    bool k = false;
+    bool l = false;
+
     if (_modeInvite)
         mode += "i";
     if (_modeTopic)
         mode += "t";
     if (_password != "")
+    {
+        k = true;
         mode += "k";
+    }
     if (_modeLimit)
+    {
+        l = true;
         mode += "l";
+    }
     if (mode == "+")
         return "";
     else
+    {
+        if (k)
+        {
+            ss << _password;
+            mode += " " + ss.str();
+            ss.clear();
+            ss.str("");
+        }
+        if (l)
+        {
+            ss << _limitNum;
+            mode += " " + ss.str();
+            ss.clear();
+            ss.str("");
+        }
         return mode;
+    }
+    return mode;
 }
 
 std::string Channel::getMembershipString(const Client&client) const

@@ -1,7 +1,6 @@
 #ifndef CMD_MANAGER_HPP
 # define CMD_MANAGER_HPP
 
-# include <sstream>
 # include "ClientManager.hpp"
 # include "ChannelManager.hpp"
  
