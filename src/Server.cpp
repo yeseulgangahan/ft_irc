@@ -46,18 +46,27 @@ void Server::receiveCommand(Client &sender, const size_t &i)
 	}
 }
 
-void Server::connectNewClient(void)
+void Server::connectNewClient(size_t pollSize)
 {
 	int clientFd = -1;
+	
 	while (clientFd == -1)
 	{
 		if ((clientFd = accept(_serverSocket, NULL, NULL)) < 0)
 			throw std::exception();
 		else
 		{
-			std::cout << YELLOW << "Socket fd " << clientFd << " accepted" << RESET << std::endl;
-			addNewPoll(clientFd);
-			_clientManager.addClient(clientFd);
+			if (pollSize > MAX_CLIENT)
+			{
+				std::cout << YELLOW << "Server is full. Please try later." << RESET << std::endl;
+				close(clientFd);
+			}
+			else
+			{
+				std::cout << YELLOW << "Socket fd " << clientFd << " accepted" << RESET << std::endl;
+				addNewPoll(clientFd);
+				_clientManager.addClient(clientFd);
+			}
 		}
 	};
 }
@@ -75,13 +84,16 @@ void Server::addNewPoll(int socketFd)
 
 void Server::PollLoop(void)
 {
+	int whilecount = 1;
 	while (1)
 	{
+		std::cout << "while in: " << whilecount++ << std::endl;
 		if (poll(&_pollFds[0], _pollFds.size(), TIMEOUT) == -1)
 			throw std::exception();
 		
 		for (size_t i(0); i < _pollFds.size(); ++i)
 		{
+			std::cout << "i: " << i << std::endl;
 			if (_pollFds[i].revents == 0)
 				continue;
 
@@ -91,7 +103,7 @@ void Server::PollLoop(void)
 				_pollFds.erase(_pollFds.begin() + i);
 			}
 			else if (_pollFds[i].revents & POLLIN)
-				(_pollFds[i].fd == _serverSocket) ? connectNewClient() : receiveCommand(_clientManager.getClient(_pollFds[i].fd), i);
+				(_pollFds[i].fd == _serverSocket) ? connectNewClient(_pollFds.size()) : receiveCommand(_clientManager.getClient(_pollFds[i].fd), i);
 			else if (_pollFds[i].revents & POLLOUT)
 			{
 				_clientManager.getClient(_pollFds[i].fd).sendMessages();

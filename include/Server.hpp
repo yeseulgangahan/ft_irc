@@ -21,8 +21,8 @@
 # include "CmdManager.hpp"
 
 # define TIMEOUT 5000
-
 # define BUF_LEN 4096
+# define MAX_CLIENT 3
 
 class Client;
 class Server
@@ -49,7 +49,7 @@ class Server
 		void	addClient(int socketfd);
 		void	receiveCommand(Client &client, const size_t &i);
 		void	PollLoop(void);
-		void	connectNewClient(void);
+		void	connectNewClient(size_t pollSize);
 };
 
 #endif
