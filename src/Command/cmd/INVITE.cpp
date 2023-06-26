@@ -18,5 +18,5 @@ void CmdManager::invite(Client& sender, const Command& cmd)
 	Client& target_user = clientManager.getClientByNick(targetUserName);
 	Channel& channel = channelManager.getChannel(channel_name);
 
-	channel.invite(cmd, sender, target_user);
+	channel.addInvitedList(cmd, sender, target_user);
 }

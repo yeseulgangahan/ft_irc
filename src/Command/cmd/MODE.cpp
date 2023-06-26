@@ -90,7 +90,7 @@ void CmdManager::modeLimit(Channel &channel, Client &sender, const Command &cmd)
 
 void CmdManager::modeState(Channel &channel, Client &sender)
 {
-	reply(sender, RPL_CHANNELMODEIS(sender, channel, channel.get_mode(), ""));
+	reply(sender, RPL_CHANNELMODEIS(sender, channel, channel.getModeString(), ""));
 }
 
 void CmdManager::mode(Client &sender, const Command &cmd)

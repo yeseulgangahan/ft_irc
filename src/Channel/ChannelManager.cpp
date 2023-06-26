@@ -47,10 +47,10 @@ void ChannelManager::removeTerminatedClient(Client &client)
 	{
 		Channel &channel = const_cast<Channel&>(*channelIter);
 
-		if (channel.is_member(client))//체널의 멤버면 멤버를 지운다
+		if (channel.isMember(client))//체널의 멤버면 멤버를 지운다
 		{
-			channel.removeClient(client);
-			if (channel.get_members().empty())//채널이 텅 비었으면 채널도 지운다
+			channel.removeMember(client);
+			if (channel.getMembers().empty())//채널이 텅 비었으면 채널도 지운다
 				getChannels().erase(channel);
 		}
 	}
@@ -63,7 +63,7 @@ void ChannelManager::removeDepartedClient(const Command& cmd, Client &sender, st
 		if (requireExistChannel(sender, channelList[i]))//존재하는 채널이면
 		{
 			getChannel(channelList[i]).broadcast(sender, REPLY(sender.getUserInfo(), cmd._commandName, channelList[i], ""));//해당 채널에서 PART 메시지를 보내야 한다
-			getChannel(channelList[i]).removeClient(sender);//떠난다
+			getChannel(channelList[i]).removeMember(sender);//떠난다
 
 		}
 	}
@@ -107,8 +107,8 @@ std::set<Client> ChannelManager::get_same_channel_clients(Client&sender)
 	for(channelIter it = channels.begin(); it != channels.end(); it++)
 	{
 		const Channel &channel = *it;
-		if (channel.is_member(sender))
-			clients.insert(channel.get_members().begin(), channel.get_members().end());
+		if (channel.isMember(sender))
+			clients.insert(channel.getMembers().begin(), channel.getMembers().end());
 	}
 	return clients;
 }

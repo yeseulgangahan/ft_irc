@@ -7,7 +7,7 @@ static const std::string &channel_name(const Command &cmd)
 
 static void send_who_reply(Client &sender, Channel &channel)
 {
-	std::set<Client> members = channel.get_members();
+	std::set<Client> members = channel.getMembers();
 
 	for (client_it it = members.begin(); it != members.end(); it++)
 		reply(sender, RPL_WHOREPLY(sender, channel, (*it)));

@@ -34,9 +34,6 @@ private:
     bool _modeLimit;
     bool _modeKey;
 
-    //*** ?? getter로 대체 후 삭제
-    bool requireValidNum(Client &sender, const std::string &string);//mode i 에서만 사용
-
     //변형된 결과 getter (private)
     bool isOperator(const Client& target) const;
     std::string getTopicReplyString(const Client& sender);
@@ -52,29 +49,26 @@ public:
     
     //기본 getter
     std::string getName() const;
-    const std::set<Client>& get_members() const;//*** getMembers()
+    const std::set<Client>& getMembers() const;
 
     //변형된 결과 getter
-    std::string get_mode() const;// getModeString()
+    std::string getModeString() const;
     std::string getMembershipString(const Client&client) const;
-    bool is_member(const Client& target) const;//isMember()
+    bool isMember(const Client& target) const;
     
     //내용 변경
-    void removeClient(Client& target);
+    void removeMember(Client& target);
     void addMember(const Command&cmd, Client& sender, const std::string & pass = "");
-    void set_topic(const Command&cmd, Client &sender, const std::string &topic); // ***setTopic
+    void ejectMember(const Command&cmd, Client &sender, Client& target);
+    void setTopic(const Command&cmd, Client &sender, const std::string &topic);
+    void addInvitedList(const Command&cmd, Client &sender, Client& target);
 
     //클라이언트에게 행동
     void broadcast(const Client& sender, std::string message) const;
     void broadcastExceptSender(const Client& sender, std::string message) const;
-    void names(const Client& sender) const;//*** replyNamesCommend()
-    void show_topic(Client &sender);//*** showTopic()
+    void replyNamesCommend(const Client& sender) const;
+    void showTopic(Client &sender);
     
-    // ?? 아직안봄
-    void kick(const Command&cmd, Client &sender, Client& target);
-    void invite(const Command&cmd, Client &sender, Client& target);
-
-    //*** ?? mode 뺄 때 내용도 삭제하는지 체크할 것
     void modeInviteState(Client &client);
     void modeInvite(const Command&cmd, Client &sender, bool valid);
     void modeOperator(const Command&cmd, Client &sender, bool valid, Client &target);

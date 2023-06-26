@@ -15,7 +15,7 @@ Channel::Channel(const Command& cmd, const std::string &name, const Client& clie
     
     broadcast(client,  REP_CMD(client, cmd));
     reply(client, getTopicReplyString(client));
-    names(client);
+    replyNamesCommend(client);
 }
 
 bool Channel::isOperator(const Client& target) const
@@ -43,7 +43,7 @@ bool Channel::requireOperator(Client& sender) const
 
 bool Channel::requireTargetInChannel(Client& sender, Client &target) const
 {
-    if (!is_member(target))
+    if (!isMember(target))
 	{
         reply(sender, ERR_USERNOTINCHANNEL(sender, target, (*this)));
         return false;
@@ -53,7 +53,7 @@ bool Channel::requireTargetInChannel(Client& sender, Client &target) const
 
 bool Channel::requireSenderOnChannel(const Client& sender) const
 {
-    if (!is_member(sender))
+    if (!isMember(sender))
 	{
         reply(sender, ERR_NOTONCHANNEL(sender, (*this)));
         return false;
@@ -66,12 +66,12 @@ std::string Channel::getName() const
     return _name;
 }
 
-const std::set<Client>& Channel::get_members() const
+const std::set<Client>& Channel::getMembers() const
 {
     return _members;
 }
 
-std::string Channel::get_mode() const
+std::string Channel::getModeString() const
 {
     std::string mode = "+";
     if (_modeInvite)
@@ -90,19 +90,19 @@ std::string Channel::get_mode() const
 
 std::string Channel::getMembershipString(const Client&client) const
 {
-    if (!is_member(client))
+    if (!isMember(client))
         throw std::runtime_error("getMembershipString must member");
     if (isOperator(client)) return "@";
     else return "";
 }
 
 
-bool Channel::is_member(const Client& target) const
+bool Channel::isMember(const Client& target) const
 {
     return _members.find(target) != _members.end();
 }
 
-void Channel::removeClient(Client& target)
+void Channel::removeMember(Client& target)
 {
     if (!requireSenderOnChannel(target)) return;
     _members.erase(target);
@@ -113,7 +113,7 @@ void Channel::removeClient(Client& target)
 
 void Channel::addMember(const Command& cmd, Client& sender, const std::string & pass)
 {
-    if (is_member(sender)) return ;
+    if (isMember(sender)) return ;
     if (_modeInvite && (_invited.find(sender) == _invited.end()))
     {
         reply(sender, ERR_INVITEONLYCHAN(sender, (*this)));
@@ -132,10 +132,10 @@ void Channel::addMember(const Command& cmd, Client& sender, const std::string & 
     _members.insert(sender);
     broadcast(sender, REPLY(sender.getUserInfo(), cmd._commandName, _name, ""));
     reply(sender,getTopicReplyString(sender));
-    names(sender);
+    replyNamesCommend(sender);
 }
 
-void Channel::set_topic(const Command& cmd, Client &sender, const std::string &topic)
+void Channel::setTopic(const Command& cmd, Client &sender, const std::string &topic)
 {
     if (_modeTopic && !requireOperator(sender)) return;
     _topic = topic;
@@ -161,32 +161,32 @@ void Channel::broadcastExceptSender(const Client& sender, std::string message) c
     }
 }
 
-void Channel::names(const Client &sender) const
+void Channel::replyNamesCommend(const Client &sender) const
 {
 	//get_name_list: tiger @rabbit dog
 	std::string msg = "";
-	for (std::set<Client>::iterator cl_it = get_members().begin(); cl_it != get_members().end(); cl_it++)
+	for (std::set<Client>::iterator clentIter = getMembers().begin(); clentIter != getMembers().end(); clentIter++)
 	{
-		if (cl_it != get_members().begin())
+		if (clentIter != getMembers().begin())
 			msg += " ";
-		msg += getMembershipString(*cl_it);
-		msg += cl_it->getNick();
+		msg += getMembershipString(*clentIter);
+		msg += clentIter->getNick();
 	}
 
 	reply(sender, RPL_NAMREPLY(sender, (getName()), msg));
 	reply(sender, RPL_ENDOFNAMES(sender, (getName())));
 }
 
-void Channel::show_topic(Client &sender)
+void Channel::showTopic(Client &sender)
 {
     if (!requireSenderOnChannel(sender)) return;
     reply(sender, getTopicReplyString(sender));
 }
 
-void Channel::invite(const Command &cmd, Client &sender, Client& target)
+void Channel::addInvitedList(const Command &cmd, Client &sender, Client& target)
 {
 	if (!requireOperator(sender)) return;
-	if (is_member(target))
+	if (isMember(target))
 	{
         reply(sender, ERR_USERONCHANNEL(sender, target, (*this)));
 		return ;
@@ -196,15 +196,13 @@ void Channel::invite(const Command &cmd, Client &sender, Client& target)
 	reply(target, REP_CMD(sender, cmd));
 }
 
-void Channel::kick(const Command&cmd, Client &sender, Client& ban_user)
+void Channel::ejectMember(const Command&cmd, Client &sender, Client& banUser)
 {
-	//if (!requireAuthed(sender)) return;
-	//if (!requireNickUser(sender)) return;
-	if (!requireTargetInChannel(sender, ban_user)) return;
+	if (!requireTargetInChannel(sender, banUser)) return;
 	if (!requireSenderOnChannel(sender)) return;
 	if (!requireOperator(sender)) return;
-	broadcast(sender,  REP_CMD(sender, cmd));
-	removeClient(ban_user);
+	broadcast(sender, REP_CMD(sender, cmd));
+	removeMember(banUser);
 }
 
 bool Channel::operator<(const Channel& rhs) const

@@ -99,22 +99,15 @@ static bool checkDigit(std::string string)
 	return (true);
 }
 
-bool Channel::requireValidNum(Client &sender, const std::string &string)
-{
-    if (!checkDigit(string))
-    {
-        reply(sender, ERR_NEEDMOREPARAMS(sender, "MODE " + getName() + " +l " + string));
-        return false;
-    }
-    return true;
-}
-
 void Channel::modeLimitAdd(const Command &cmd, Client &sender, const std::string &string)
 {
     if (!requireOperator(sender))
         return;
-    if (!requireValidNum(sender, string))
-        return;
+    if (!checkDigit(string))
+    {
+        reply(sender, ERR_NEEDMOREPARAMS(sender, "MODE " + getName() + " +l " + string));
+        return ;
+    }
     _modeLimit = true;
     _limitNum = std::atoi(string.c_str());
     broadcast(sender, REP_CMD(sender, cmd));

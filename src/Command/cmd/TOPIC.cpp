@@ -11,8 +11,8 @@ void CmdManager::topic(Client& sender, const Command& cmd)
 	
 	Channel &channel = channelManager.getChannel(channel_name);
 	if (cmd.hasTrailing())
-		channel.set_topic(cmd, sender, cmd._trail);
+		channel.setTopic(cmd, sender, cmd._trail);
 	else 
-		channel.show_topic(sender);
+		channel.showTopic(sender);
 
 }
