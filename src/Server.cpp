@@ -84,16 +84,13 @@ void Server::addNewPoll(int socketFd)
 
 void Server::PollLoop(void)
 {
-	int whilecount = 1;
 	while (1)
 	{
-		std::cout << "while in: " << whilecount++ << std::endl;
 		if (poll(&_pollFds[0], _pollFds.size(), TIMEOUT) == -1)
 			throw std::exception();
 		
 		for (size_t i(0); i < _pollFds.size(); ++i)
 		{
-			std::cout << "i: " << i << std::endl;
 			if (_pollFds[i].revents == 0)
 				continue;
 

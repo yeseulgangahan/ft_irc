@@ -174,7 +174,7 @@ void Channel::broadcast(Client& sender, const std::string &message)
 {(void)message;
     if (!requireSenderOnChannel(sender))return;
     // for (clientIter receiver = _members.begin(); receiver != _members.end(); ++receiver)
-        // (*receiver).appendToRecvBuffer(message);
+    //     *&(receiver).appendToRecvBuffer(message);
 }
 
 void Channel::broadcastExceptSender(Client& sender, const std::string &message)

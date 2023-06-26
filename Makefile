@@ -17,11 +17,10 @@ all: $(NAME)
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp
 	@mkdir -p $(@D)
-	@echo "Compiling $<	"
 	@$(CXX) -I$(INC) $(CXXFLAGS) -o $@ -c $<
 
 $(NAME): $(OBJS)
-	@echo "\n\033[94m[Making ircserv]\033[37m"
+	@echo "\033[94m[Making ircserv]\033[37m"
 	@$(CXX) -I$(INC) $(CXXFLAGS) -o $(NAME) $(OBJS)
 	@echo "\033[32m\n...make Done!\n\033[37m"
 
@@ -32,7 +31,7 @@ clean:
 	@echo "\033[32m\n...clean Done!\n\033[37m"
 
 fclean: clean
-	@echo "\n\033[94m[Removing Binary File]\033[37m"
+	@echo "\033[94m[Removing Binary File]\033[37m"
 	@rm -rf $(OBJS)
 	@rm -rf $(OBJS_DIR)
 	@rm -rf $(NAME)
