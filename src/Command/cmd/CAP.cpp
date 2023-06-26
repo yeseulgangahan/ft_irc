@@ -8,15 +8,16 @@ static void capLS(Client &sender)
 
 static void capEND(Client &sender)
 {
-	if (sender.isAuthed() && sender.nickname_setted && sender.user_setted)
+	if (sender.isAuthed() && sender.isNicknameSetted() && sender.isUserSetted())
 	{
-		reply(sender, "Authentication Success!");
 		sendWelcomeMessages(sender);
-		std::cout << YELLOW << "Client " << sender.getNick() << "(fd " << sender.getClientFd() << ")" << " Connected" << RESET << std::endl;
+		sender.setIsRegistrationDone();//메시지 다 보내고 등록 종료
+		reply(sender, "Registration Success!");//인증: 패스워드, 등록: 패스 닉 유저
+		std::cout << YELLOW << "Client " << sender.getNick() << "(fd " << sender.getFd() << ")" << " Connected" << RESET << std::endl;
 	}
 	else
 	{
-		reply(sender, "Authentication Fail");
+		reply(sender, "Registration Fail");
 		throw std::exception();
 	}
 }

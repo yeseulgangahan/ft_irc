@@ -9,7 +9,7 @@ void Server::closeAllFd(void)
 	std::vector<Client> clients = _clientManager.getConnectClients();
 	for (size_t i = 0; i < clients.size(); i++)
 	{
-		close(clients[i].getClientFd());
+		close(clients[i].getFd());
 	}
 	close(_serverSocket);
 	std::cout << "All Socket Closed" << std::endl;
@@ -23,7 +23,7 @@ static std::string recvMessage(Client &client)
 
 	//recv로 읽은 결과 byte가 0일때 예외인가 정상처리인가?
 	ssize_t	 byte;
-	if ((byte = recv(client.getClientFd(), buf, sizeof(buf), 0)) < 0 || (byte > BUF_LEN))
+	if ((byte = recv(client.getFd(), buf, sizeof(buf), 0)) < 0 || (byte > BUF_LEN))
 		throw std::exception();
 	
 	std::cout << GREEN << "From Client " << client.getNick() << RESET << ": " << buf << std::endl;

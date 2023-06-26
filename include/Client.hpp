@@ -29,40 +29,42 @@ class Client
 		std::string _realName;
 		std::string _hostName;
 		std::string _serverName;
-		bool _isAuthedBool; 
-
-		void setUserName(const std::string &user_name) {_userName = user_name;}
-		void setRealName(const std::string &real_name) {_realName = real_name;}
-		void setHostName(const std::string &hostname) {_hostName = hostname;}
-		void setServerName(const std::string &server_name) {_serverName = server_name;}
 		
+		bool _isAuthed;
+		bool _isNicknameSetted;
+		bool _isUserSetted;
+		bool _isRegistrationDone;
+	
 	public:
 		CmdBuffer commandBuffer;
-		bool nickname_setted;
-		bool user_setted;
-		Client();
-		Client(int fd, const std::string &nc);
-		~Client();
-		int getClientFd() const;
-		bool isAuthed() const{return _isAuthedBool;}
-		size_t get_id() const{return _id;}
+
+		int getFd() const;
+		std::string getUserName() const;
+		std::string getRealName() const;
+		std::string getHostName() const;
 		std::string getNick() const;
-		std::string getUserName() const {return _userName;}
-		std::string getRealName() const {return _realName;}
-		std::string getHostName() const {return _hostName;}
-		std::string getServerName() const {return _serverName;}
-		std::string getUserInfo() const;
+		std::string getUserString() const;
+		
 		void setNick(const std::string &nick);
-		void setUserInfo(const std::string &user, const std::string &host, const std::string &server,const std::string &real);
-		bool IsNicknameExist(const std::string &nick);
-		void setisAuthed(bool b) { _isAuthedBool = b;}
+		void setUserInfo(const std::string &user, const std::string &real, const std::string &host, const std::string &server);
+		void setIsAuthed();
+		void setIsRegistrationDone();
+
+		bool isAuthed();
+		bool isNicknameSetted();
+		bool isUserSetted();
+		bool isRegistrationDone();
+		bool isNicknameExist(const std::string &nick);
+		
+		Client();// 언제 사용되지?
+		Client(int fd, const std::string &nc);//nc 뭐지?
+		~Client();
+		
 		void quit();
 		
 		bool operator<(const Client& rhs) const;
 		bool operator==(const Client& rhs) const;
 		bool operator!=(const Client& rhs) const;
 };
-
-std::ostream& operator<<(std::ostream& os, const Client& client);
 
 #endif

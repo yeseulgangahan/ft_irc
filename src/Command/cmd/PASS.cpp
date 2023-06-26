@@ -40,6 +40,6 @@ void CmdManager::pass(Client &client, const Command& cmd)
 	const std::string &password = cmd._parameters[0];
 	if (!isInputPasswordCorrect(client, password, _serverPassword)) return;
 	
-	client.setisAuthed(true);
+	client.setIsAuthed();
 	reply(client, RPL_NONE("Password Correct!"));
 }

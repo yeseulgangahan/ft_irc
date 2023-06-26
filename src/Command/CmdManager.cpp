@@ -69,12 +69,16 @@ void CmdManager::executeCommand(Client &sender, const Command &cmd)
 		case 'I':
 					if (cmd._commandName == INVITE)		
 					{	invite(sender, cmd);	break;	}
+		//인증 전에는 커맨드를 아예 받지 않아야 한다. 우리 클라이언트는 안 보내준다. nc를 위해 안 됐어도 알려준다.
 		default :
-					reply(sender, ERR_UNKNOWNCOMMAND(sender, cmd._commandName));
-					break;
+					if (sender.isRegistrationDone())//인증완료된 아이는 아래의 에러메시지
+					{   reply(sender, ERR_UNKNOWNCOMMAND(sender, cmd._commandName));	break;	}
+					else//인증 아직 안 됐으면
+					{   reply(sender, ERR_NOTREGISTERED(sender));	break;   }
 	}
 }
 
+//삭제
 bool CmdManager::requireAuthed(Client &client)
 {
 	if (!client.isAuthed())
@@ -85,9 +89,10 @@ bool CmdManager::requireAuthed(Client &client)
 	return true;
 }
 
+// requireRegistrationDone으로 변경
 bool CmdManager::requireNickUser(Client &client)
 {
-	if (!client.user_setted || !client.nickname_setted)
+	if (!client.isRegistrationDone())
 	{
 		reply(client, ERR_NOTREGISTERED(client));
 		return false;

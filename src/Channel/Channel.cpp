@@ -130,7 +130,7 @@ void Channel::addMember(const Command& cmd, Client& sender, const std::string & 
         return ;
     }
     _members.insert(sender);
-    broadcast(sender, REPLY(sender.getUserInfo(), cmd._commandName, _name, ""));
+    broadcast(sender, REPLY(sender.getUserString(), cmd._commandName, _name, ""));
     reply(sender,getTopicReplyString(sender));
     replyNamesCommend(sender);
 }

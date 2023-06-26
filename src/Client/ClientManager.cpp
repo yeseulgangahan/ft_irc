@@ -58,7 +58,7 @@ void ClientManager::deleteClient(Client &client, ChannelManager &channelManager)
 	assert(isClientExistByNick(client.getNick()));
 	_clientMap.erase(findClientByNick(client.getNick()));
 	client.quit();
-	close(client.getClientFd());
+	close(client.getFd());
 	std::cout << YELLOW << "Total Clients: " << _clientMap.size() << RESET << std::endl;
 }
 

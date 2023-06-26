@@ -39,7 +39,7 @@ const std::string serverName = "ft_IRC";
 #define ERR_ALREADYREGISTRED(sender) RPL_NICK_MSG(sender, "462", "", "You may not reregister")
 
 // CAP END
-#define RPL_WELCOME(client) REPLY(serverName, "001", client.getNick(), "Welcome to the IRC Network " + client.getUserInfo())
+#define RPL_WELCOME(client) REPLY(serverName, "001", client.getNick(), "Welcome to the IRC Network " + client.getUserString())
 #define RPL_YOURHOST(client) REPLY(serverName, "002", client.getNick(), "Your host is " + serverName + ", running version 1.0")
 //#define RPL_CREATED(client) REPLY(serverName, "003", client.getNick(), "This server was created [getTime()]")
 //#define RPL_MYINFO(client) REPLY(serverName, "004", client.getNick(), serverName + " 1.0 - -")
@@ -52,7 +52,7 @@ const std::string serverName = "ft_IRC";
 // QUIT
 
 /* GENERAL */
-#define REP_CMD(client, cmd) REPLY(client.getUserInfo(), cmd.getWholeString(), "", "")
+#define REP_CMD(client, cmd) REPLY(client.getUserString(), cmd.getWholeString(), "", "")
 #define RPL_NONE(msg) REPLY(serverName, "300", "*", msg)
 #define ERR_NEEDMOREPARAMS(sender, cmdName) RPL_NICK_MSG(sender, "461", cmdName, "Not enough parameters")
 #define ERR_UNKNOWNCOMMAND(sender, cmdName) RPL_NICK_MSG(sender, "421", cmdName, "Unknown command")

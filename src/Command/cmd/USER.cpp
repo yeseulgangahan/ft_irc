@@ -2,7 +2,7 @@
 
 static bool require_yet_set_user(Client &client)
 {
-	if (client.user_setted)
+	if (client.isUserSetted())
 	{
 		reply(client, ERR_ALREADYREGISTRED(client));
 		return false;
