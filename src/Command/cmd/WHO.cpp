@@ -17,10 +17,10 @@ static void send_who_reply(Client &sender, Channel &channel)
 
 void CmdManager::who(Client &sender, const Command &cmd)
 {
-	if (!require_authed(sender) && !require_nick_user(sender) &&
-		!require_enough_params(sender, cmd, 1, 2) &&
-		!channelManager.require_exist_channel(sender, channel_name(cmd)))
+	if (!requireAuthed(sender) && !requireNickUser(sender) &&
+		!requireEnoughParams(sender, cmd, 1, 2) &&
+		!channelManager.requireExistChannel(sender, channel_name(cmd)))
 		return;
 
-	send_who_reply(sender, channelManager.get_channel(channel_name(cmd)));
+	send_who_reply(sender, channelManager.getChannel(channel_name(cmd)));
 }

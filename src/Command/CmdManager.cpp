@@ -3,7 +3,7 @@
 CmdManager::CmdManager(ClientManager &clientManager, ChannelManager &channelManager, const std::string &serverPassword)
 : clientManager(clientManager), channelManager(channelManager), _serverPassword(serverPassword) { }
 
-std::vector<Command> CmdManager::parse_commands(const std::string &commands_msg)
+std::vector<Command> CmdManager::parseCommands(const std::string &commands_msg)
 {
     std::vector<std::string> cmd_lines = splitByLines(commands_msg);
     std::vector<Command> cmds;
@@ -75,7 +75,7 @@ void CmdManager::executeCommand(Client &sender, const Command &cmd)
 	}
 }
 
-bool CmdManager::require_authed(Client &client)
+bool CmdManager::requireAuthed(Client &client)
 {
 	if (!client.isAuthed())
 	{
@@ -85,7 +85,7 @@ bool CmdManager::require_authed(Client &client)
 	return true;
 }
 
-bool CmdManager::require_nick_user(Client &client)
+bool CmdManager::requireNickUser(Client &client)
 {
 	if (!client.user_setted || !client.nickname_setted)
 	{
@@ -95,7 +95,7 @@ bool CmdManager::require_nick_user(Client &client)
 	return true;
 }
 
-bool CmdManager::require_enough_params(Client &sender, const Command& cmd, size_t ok_size_min, size_t ng_size_min, bool require_trailing)
+bool CmdManager::requireEnoughParams(Client &sender, const Command& cmd, size_t ok_size_min, size_t ng_size_min, bool require_trailing)
 {
 	assert(ok_size_min < ng_size_min);
 
@@ -104,7 +104,7 @@ bool CmdManager::require_enough_params(Client &sender, const Command& cmd, size_
 	bool ok = true;
 	ok &= (ok_size_min <= param_size) && (param_size < ng_size_min);
 	if (require_trailing)
-		ok &= cmd.has_trailing();
+		ok &= cmd.hasTrailing();
 
 	if (!ok)
 	{
@@ -115,83 +115,83 @@ bool CmdManager::require_enough_params(Client &sender, const Command& cmd, size_
 }
 
 
-void CmdManager::plus_option(Channel &channel, Client &sender, const Command &cmd)
+void CmdManager::plusOption(Channel &channel, Client &sender, const Command &cmd)
 {
 
 	for (size_t i = 1; i < cmd._parameters[1].size(); i ++)
 	{
 		switch (cmd._parameters[1][i])
 		{
-			case 'i':	channel.mode_i(cmd, sender, true);				break;
+			case 'i':	channel.modeInvite(cmd, sender, true);				break;
 			case 'o':	
-						if (!require_enough_params(sender, cmd, 3, 6))
+						if (!requireEnoughParams(sender, cmd, 3, 6))
 							return;
-						if (!clientManager.require_exist_nick(sender, cmd._parameters[2]))
+						if (!clientManager.requireExistNick(sender, cmd._parameters[2]))
 							return;
-						channel.mode_o(cmd, sender, true, \
-						clientManager.get_client_by_nick(cmd._parameters[2]));
+						channel.modeOperator(cmd, sender, true, \
+						clientManager.getClientByNick(cmd._parameters[2]));
 																		break;
 			case 't':
-						if (!require_enough_params(sender, cmd, 2, 6))
+						if (!requireEnoughParams(sender, cmd, 2, 6))
 							return;
-						channel.mode_t(cmd, sender, true);				break;
+						channel.modeTopic(cmd, sender, true);				break;
 
 			case 'k':
-						if (!require_enough_params(sender, cmd, 2, 6))
+						if (!requireEnoughParams(sender, cmd, 2, 6))
 							return;
-						if (!require_enough_params(sender, cmd, 3, 6))
+						if (!requireEnoughParams(sender, cmd, 3, 6))
 							return;
 						// cmd._parameters.
-						channel.mode_k_add(cmd, sender, cmd._parameters[2]);
+						channel.modeKeyAdd(cmd, sender, cmd._parameters[2]);
 																		break;
 			case 'l':
-						if (!require_enough_params(sender, cmd, 2, 6))
+						if (!requireEnoughParams(sender, cmd, 2, 6))
 							return;
-						if (!require_enough_params(sender, cmd, 3, 6))
+						if (!requireEnoughParams(sender, cmd, 3, 6))
 							return;
-						channel.mode_l_add(cmd, sender, cmd._parameters[2]);
+						channel.modeLimitAdd(cmd, sender, cmd._parameters[2]);
 																		break;
 			default :	break;
 		}
 	}	
 }
 
-void CmdManager::minus_option(Channel &channel, Client &sender, const Command &cmd)
+void CmdManager::minusOption(Channel &channel, Client &sender, const Command &cmd)
 {
 	for (size_t i = 1; i < cmd._parameters[1].size(); i ++)
 	{
 		switch (cmd._parameters[1][i])
 		{
-			case 'i':	channel.mode_i(cmd, sender, false);				break;
+			case 'i':	channel.modeInvite(cmd, sender, false);				break;
 			case 'o':	
-						if (!require_enough_params(sender, cmd, 3, 6))
+						if (!requireEnoughParams(sender, cmd, 3, 6))
 							return;
-						if (!clientManager.require_exist_nick(sender, cmd._parameters[2]))
+						if (!clientManager.requireExistNick(sender, cmd._parameters[2]))
 							return;
-						channel.mode_o(cmd, sender, false, \
-						clientManager.get_client_by_nick(cmd._parameters[2]));
+						channel.modeOperator(cmd, sender, false, \
+						clientManager.getClientByNick(cmd._parameters[2]));
 																		break;
 			case 't':
-						if (!require_enough_params(sender, cmd, 2, 6))
+						if (!requireEnoughParams(sender, cmd, 2, 6))
 							return;
-						channel.mode_t(cmd, sender, false);
+						channel.modeTopic(cmd, sender, false);
 																		break;
 			case 'k':
-						if (!require_enough_params(sender, cmd, 2, 6))
+						if (!requireEnoughParams(sender, cmd, 2, 6))
 							return;
-						channel.mode_k_rem(cmd, sender);
+						channel.modeKeyRemove(cmd, sender);
 																		break;
 			case 'l':
-						if (!require_enough_params(sender, cmd, 2, 6))
+						if (!requireEnoughParams(sender, cmd, 2, 6))
 							return;
-						channel.mode_l_rem(cmd, sender);
+						channel.modeLimitRemove(cmd, sender);
 																		break;
 			default :	break;
 		}
 	}
 }
 
-std::vector<std::string> ft_split(const std::string& s, const std::vector<std::string>& delimitersVec)
+std::vector<std::string> ftSplit(const std::string& s, const std::vector<std::string>& delimitersVec)
 {
     std::vector<std::string> splited;
     size_t left = 0;
@@ -219,9 +219,9 @@ std::vector<std::string> ft_split(const std::string& s, const std::vector<std::s
     return (splited);
 }
 
-std::vector<std::string> ft_split(const std::string& s, const std::string& t)
+std::vector<std::string> ftSplit(const std::string& s, const std::string& t)
 {
-    return (ft_split(s, std::vector<std::string>(1, t)));
+    return (ftSplit(s, std::vector<std::string>(1, t)));
 }
 
 std::vector<std::string> splitByLines(const std::string& s)
@@ -231,5 +231,5 @@ std::vector<std::string> splitByLines(const std::string& s)
 	delimiters.push_back(std::string("\r\n"));
     delimiters.push_back(std::string("\n"));
     
-	return (ft_split(s, delimiters));
+	return (ftSplit(s, delimiters));
 }

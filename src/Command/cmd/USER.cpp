@@ -12,9 +12,9 @@ static bool require_yet_set_user(Client &client)
 
 void CmdManager::user(Client &client, const Command &cmd)
 {
-	if (!require_authed(client)) return;
-	if (!require_enough_params(client, cmd, 3, 4, true)) return;
+	if (!requireAuthed(client)) return;
+	if (!requireEnoughParams(client, cmd, 3, 4, true)) return;
 
 	if (!require_yet_set_user(client)) return;
-	client.set_user_info(cmd._parameters[0], cmd._parameters[1], cmd._parameters[2], cmd._trail);
+	client.setUserInfo(cmd._parameters[0], cmd._parameters[1], cmd._parameters[2], cmd._trail);
 }

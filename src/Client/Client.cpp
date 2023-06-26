@@ -1,15 +1,15 @@
 #include "../include/Client.hpp"
 
-static size_t generate_id()
+static size_t generateId()
 {
-	static size_t cur_id = 0;
-	return cur_id++;
+	static size_t curId = 0;
+	return curId++;
 }
 
 
-Client::Client() : _id(generate_id()), _fd(-1), isAuthedBool(false), nickname_setted(false), user_setted(false) {}
+Client::Client() : _id(generateId()), _fd(-1), _isAuthedBool(false), nickname_setted(false), user_setted(false) {}
 
-Client::Client(int fd, const std::string &nc) : _id(generate_id()), _fd(fd), isAuthedBool(false), nickname_setted(false), user_setted(false) { (void)nc; }
+Client::Client(int fd, const std::string &nc) : _id(generateId()), _fd(fd), _isAuthedBool(false), nickname_setted(false), user_setted(false) { (void)nc; }
 
 Client::~Client() {}
 
@@ -18,51 +18,51 @@ int Client::getClientFd() const
 	return (_fd);
 }
 
-static std::map<Client, std::string> &get_nickname_dict()
+static std::map<Client, std::string> &getNicknameDict()
 {
 	static std::map<Client, std::string> nickname_dict;
 	return nickname_dict;
 }
 
-std::string Client::get_nick() const
+std::string Client::getNick() const
 {
-	return get_nickname_dict()[*this];
+	return getNicknameDict()[*this];
 }
 
-void Client::set_nick(const std::string &nick)
+void Client::setNick(const std::string &nick)
 {
-	if (exist_nickname(nick))
+	if (IsNicknameExist(nick))
 		return;
-	get_nickname_dict()[*this] = nick;
+	getNicknameDict()[*this] = nick;
 	nickname_setted = true;
 }
 
-void Client::set_user_info(const std::string &user, const std::string &host, const std::string &server, const std::string &real)
+void Client::setUserInfo(const std::string &user, const std::string &host, const std::string &server, const std::string &real)
 {
-	set_user_name(user);
-	set_host_name(host);
-	set_server_name(server);
-	set_real_name(real);
+	setUserName(user);
+	setHostName(host);
+	setServerName(server);
+	setRealName(real);
 	user_setted = true;
 }
 
-bool Client::exist_nickname(const std::string &nick)
+bool Client::IsNicknameExist(const std::string &nick)
 {
-	std::map<Client, std::string> nicks = get_nickname_dict();
+	std::map<Client, std::string> nicks = getNicknameDict();
 	for (std::map<Client, std::string>::iterator it = nicks.begin(); it != nicks.end(); it++)
 		if (it->second == nick)
 			return true;
 	return false;
 }
 
-std::string Client::get_user_info() const
+std::string Client::getUserInfo() const
 {
-	return get_nick() + "!" + get_user_name() + "@" + get_host_name();
+	return getNick() + "!" + getUserName() + "@" + getHostName();
 }
 
 void Client::quit()
 {
-	get_nickname_dict().erase(*this);
+	getNicknameDict().erase(*this);
 }
 
 bool Client::operator<(const Client &rhs) const
@@ -82,9 +82,9 @@ bool Client::operator!=(const Client &rhs) const
 
 std::ostream &operator<<(std::ostream &os, const Client &client)
 {
-	os << "nick_name : " << client.get_nick() << ", ";
-	os << "real_name : " << client.get_real_name() << ", ";
-	os << "host_name : " << client.get_host_name() << ", ";
+	os << "nick_name : " << client.getNick() << ", ";
+	os << "real_name : " << client.getRealName() << ", ";
+	os << "host_name : " << client.getHostName() << ", ";
 	os << "client_fd : " << client.getClientFd() << std::endl;
 	return os;
 }

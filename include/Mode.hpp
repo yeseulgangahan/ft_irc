@@ -31,42 +31,40 @@ const std::string MODE_L = "l";
 const std::string MODE_L_ADD = "+l";
 const std::string MODE_L_REM = "-l";
 
-std::string get_flag(const Command &cmd)
+std::string getFlag(const Command &cmd)
 {
 	assert(cmd._parameters.size() > 1);
 	return cmd._parameters[1];
 }
 
-bool is_mode_i(const Command &cmd)
+bool isModeInvite(const Command &cmd)
 {
-	std::string flag = get_flag(cmd);
+	std::string flag = getFlag(cmd);
 	return flag == MODE_I_ADD || flag == MODE_I_REM || flag == MODE_I;
 }
 
-bool is_mode_o(const Command &cmd)
+bool isModeOperator(const Command &cmd)
 {
-	std::string flag = get_flag(cmd);
+	std::string flag = getFlag(cmd);
 	return flag == MODE_O_ADD || flag == MODE_O_REM;
 }
 
-bool is_mode_t(const Command &cmd)
+bool isModeTopic(const Command &cmd)
 {
-	std::string flag = get_flag(cmd);
+	std::string flag = getFlag(cmd);
 	return flag == MODE_T_ADD || flag == MODE_T_REM || flag == MODE_T;
 }
 
-bool is_mode_k(const Command &cmd)
+bool isModeKey(const Command &cmd)
 {
-	std::string flag = get_flag(cmd);
+	std::string flag = getFlag(cmd);
 	return flag == MODE_K_ADD || flag == MODE_K_REM || flag == MODE_K;
 }
 
-bool is_mode_l(const Command &cmd)
+bool isModeLimit(const Command &cmd)
 {
-	std::string flag = get_flag(cmd);
+	std::string flag = getFlag(cmd);
 	return flag == MODE_L_ADD || flag == MODE_L_REM || flag == MODE_L;
 }
-
-
 
 #endif // MODE_HPP

@@ -4,9 +4,9 @@
 Server::Server(int port, std::string &password) : _port(port), _password(password), cmdManager(_clientManager, _channelManager, password) {}
 Server::~Server() {}
 
-void Server::close_all_fd(void)
+void Server::closeAllFd(void)
 {
-	std::vector<Client> clients = _clientManager.get_connect_clients();
+	std::vector<Client> clients = _clientManager.getConnectClients();
 	for (size_t i = 0; i < clients.size(); i++)
 	{
 		close(clients[i].getClientFd());
@@ -26,7 +26,7 @@ static std::string recvMessage(Client &client)
 	if ((byte = recv(client.getClientFd(), buf, sizeof(buf), 0)) < 0 || (byte > BUF_LEN))
 		throw std::exception();
 	
-	std::cout << GREEN << "From Client " << client.get_nick() << RESET << ": " << buf << std::endl;
+	std::cout << GREEN << "From Client " << client.getNick() << RESET << ": " << buf << std::endl;
 	
 	return buf;
 }

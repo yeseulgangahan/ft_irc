@@ -29,13 +29,13 @@ private:
     std::set<Client> _invited;
 
     //MODE
-    bool _modeInvited;
+    bool _modeInvite;
     bool _modeTopic;
     bool _modeLimit;
     bool _modeKey;
 
     //*** ?? getter로 대체 후 삭제
-    bool require_valid_num(Client &sender, const std::string &string);//mode i 에서만 사용
+    bool requireValidNum(Client &sender, const std::string &string);//mode i 에서만 사용
 
     //변형된 결과 getter (private)
     bool isOperator(const Client& target) const;
@@ -75,17 +75,17 @@ public:
     void invite(const Command&cmd, Client &sender, Client& target);
 
     //*** ?? mode 뺄 때 내용도 삭제하는지 체크할 것
-    void mode_i_state(Client &client);
-    void mode_i(const Command&cmd, Client &sender, bool valid);
-    void mode_o(const Command&cmd, Client &sender, bool valid, Client &target);
-    void mode_t_state(Client &sender);
-    void mode_t(const Command&cmd, Client &sender, bool valid);
-    void mode_k_state(Client &sender);
-    void mode_k_add(const Command&cmd, Client &sender, const std::string &new_pass);
-    void mode_k_rem(const Command&cmd, Client &sender);
-    void mode_l_state(Client &sender);
-    void mode_l_add(const Command&cmd, Client &sender, const std::string &new_pass);
-    void mode_l_rem(const Command&cmd, Client &sender);
+    void modeInviteState(Client &client);
+    void modeInvite(const Command&cmd, Client &sender, bool valid);
+    void modeOperator(const Command&cmd, Client &sender, bool valid, Client &target);
+    void modeTopicState(Client &sender);
+    void modeTopic(const Command&cmd, Client &sender, bool valid);
+    void modeKey(Client &sender);
+    void modeKeyAdd(const Command&cmd, Client &sender, const std::string &new_pass);
+    void modeKeyRemove(const Command&cmd, Client &sender);
+    void modeLimitState(Client &sender);
+    void modeLimitAdd(const Command&cmd, Client &sender, const std::string &new_pass);
+    void modeLimitRemove(const Command&cmd, Client &sender);
 
     // 삭제??
     bool operator<(const Channel& rhs) const;

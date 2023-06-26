@@ -9,7 +9,7 @@ Server *server;
 
 void signal_handler(int signal)
 {
-	server->close_all_fd();
+	server->closeAllFd();
 	std::cout << " exit " << std::endl;
 	std::exit(signal);
 }
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 	{
 		std::cerr << e.what() << '\n';
 		if (server)
-			server->close_all_fd();
+			server->closeAllFd();
 		return (1);
 	}
 	return (0);

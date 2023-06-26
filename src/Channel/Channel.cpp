@@ -5,7 +5,7 @@ Channel::Channel(const Command& cmd, const std::string &name, const Client& clie
     _password(pwd), \
     _topic(""), \
     _limitNum(0), \
-    _modeInvited(false), \
+    _modeInvite(false), \
     _modeTopic(true), \
     _modeLimit(false),
     _modeKey(false)
@@ -74,7 +74,7 @@ const std::set<Client>& Channel::get_members() const
 std::string Channel::get_mode() const
 {
     std::string mode = "+";
-    if (_modeInvited)
+    if (_modeInvite)
         mode += "i";
     if (_modeTopic)
         mode += "t";
@@ -114,7 +114,7 @@ void Channel::removeClient(Client& target)
 void Channel::addMember(const Command& cmd, Client& sender, const std::string & pass)
 {
     if (is_member(sender)) return ;
-    if (_modeInvited && (_invited.find(sender) == _invited.end()))
+    if (_modeInvite && (_invited.find(sender) == _invited.end()))
     {
         reply(sender, ERR_INVITEONLYCHAN(sender, (*this)));
         return ;
@@ -130,7 +130,7 @@ void Channel::addMember(const Command& cmd, Client& sender, const std::string & 
         return ;
     }
     _members.insert(sender);
-    broadcast(sender, REPLY(sender.get_user_info(), cmd._commandName, _name, ""));
+    broadcast(sender, REPLY(sender.getUserInfo(), cmd._commandName, _name, ""));
     reply(sender,getTopicReplyString(sender));
     names(sender);
 }
@@ -170,7 +170,7 @@ void Channel::names(const Client &sender) const
 		if (cl_it != get_members().begin())
 			msg += " ";
 		msg += getMembershipString(*cl_it);
-		msg += cl_it->get_nick();
+		msg += cl_it->getNick();
 	}
 
 	reply(sender, RPL_NAMREPLY(sender, (getName()), msg));
@@ -198,8 +198,8 @@ void Channel::invite(const Command &cmd, Client &sender, Client& target)
 
 void Channel::kick(const Command&cmd, Client &sender, Client& ban_user)
 {
-	//if (!require_authed(sender)) return;
-	//if (!require_nick_user(sender)) return;
+	//if (!requireAuthed(sender)) return;
+	//if (!requireNickUser(sender)) return;
 	if (!requireTargetInChannel(sender, ban_user)) return;
 	if (!requireSenderOnChannel(sender)) return;
 	if (!requireOperator(sender)) return;
@@ -207,23 +207,7 @@ void Channel::kick(const Command&cmd, Client &sender, Client& ban_user)
 	removeClient(ban_user);
 }
 
-// const std::set<Client>& Channel::get_operators() const
-// {
-//     return operators;
-// }
-
 bool Channel::operator<(const Channel& rhs) const
 {
     return this->_name < rhs.getName();
 }
-
-// std::ostream& operator<<(std::ostream& os, const Channel& channel)
-// {
-//     os<<"--------------------"<<std::endl;
-//     os<<"channel_name : "<<channel.getName()<<std::endl;
-//     os<<"pass         : "<<channel.get_password()<<std::endl;
-//     os<<"users        : \n"<<channel.get_members()<<std::endl<<std::endl;;
-//     os<<"operators    : \n"<<channel.get_operators()<<std::endl<<std::endl;;
-//     os<<"--------------------\n"<<std::endl;
-//     return os;
-// }

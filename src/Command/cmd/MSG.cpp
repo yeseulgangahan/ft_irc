@@ -10,11 +10,11 @@ static bool require_valid_param(Client &client, const Command &cmd, CmdManager &
 			reply(client, ERR_NORECIPIENT(client, cmd.getWholeString()));
 		is_ok = false;
 	}
-	else if (!cmdManager.require_enough_params(client, cmd, 1, 2))
+	else if (!cmdManager.requireEnoughParams(client, cmd, 1, 2))
 	{
 		is_ok = false;
 	}
-	if (!cmd.has_trailing())
+	if (!cmd.hasTrailing())
 	{
 		if(reply_require == recv_reply)
 			reply(client, ERR_NOTEXTTOSEND(client));
@@ -25,7 +25,7 @@ static bool require_valid_param(Client &client, const Command &cmd, CmdManager &
 
 static std::vector<std::string> parse_targets(const Command &cmd)
 {
-	return ft_split(cmd._parameters[0], ",");
+	return ftSplit(cmd._parameters[0], ",");
 }
 
 static bool is_channel(const std::string &reicieve)
@@ -35,8 +35,8 @@ static bool is_channel(const std::string &reicieve)
 
 void CmdManager::privmsg(Client& client, const Command &cmd)
 {
-	if (!require_authed(client)) return;
-	if (!require_nick_user(client)) return;
+	if (!requireAuthed(client)) return;
+	if (!requireNickUser(client)) return;
 	if (!require_valid_param(client, cmd, *this, recv_reply)) return;
 	std::vector<std::string> targets = parse_targets(cmd);
 	for (size_t i = 0; i < targets.size(); i++)

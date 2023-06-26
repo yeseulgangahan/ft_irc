@@ -25,16 +25,16 @@ class Client
 		size_t	_id; 
 		int		_fd;
 		
-		std::string _user_name;
-		std::string _real_name;
-		std::string _host_name;
-		std::string _server_name;
-		bool isAuthedBool; 
+		std::string _userName;
+		std::string _realName;
+		std::string _hostName;
+		std::string _serverName;
+		bool _isAuthedBool; 
 
-		void set_user_name(const std::string &user_name) {_user_name = user_name;}
-		void set_real_name(const std::string &real_name) {_real_name = real_name;}
-		void set_host_name(const std::string &hostname) {_host_name = hostname;}
-		void set_server_name(const std::string &server_name) {_server_name = server_name;}
+		void setUserName(const std::string &user_name) {_userName = user_name;}
+		void setRealName(const std::string &real_name) {_realName = real_name;}
+		void setHostName(const std::string &hostname) {_hostName = hostname;}
+		void setServerName(const std::string &server_name) {_serverName = server_name;}
 		
 	public:
 		CmdBuffer commandBuffer;
@@ -44,18 +44,18 @@ class Client
 		Client(int fd, const std::string &nc);
 		~Client();
 		int getClientFd() const;
-		bool isAuthed() const{return isAuthedBool;}
+		bool isAuthed() const{return _isAuthedBool;}
 		size_t get_id() const{return _id;}
-		std::string get_nick() const;
-		std::string get_user_name() const {return _user_name;}
-		std::string get_real_name() const {return _real_name;}
-		std::string get_host_name() const {return _host_name;}
-		std::string get_server_name() const {return _server_name;}
-		std::string get_user_info() const;
-		void set_nick(const std::string &nick);
-		void set_user_info(const std::string &user, const std::string &host, const std::string &server,const std::string &real);
-		bool exist_nickname(const std::string &nick);
-		void setisAuthed(bool b) { isAuthedBool = b;}
+		std::string getNick() const;
+		std::string getUserName() const {return _userName;}
+		std::string getRealName() const {return _realName;}
+		std::string getHostName() const {return _hostName;}
+		std::string getServerName() const {return _serverName;}
+		std::string getUserInfo() const;
+		void setNick(const std::string &nick);
+		void setUserInfo(const std::string &user, const std::string &host, const std::string &server,const std::string &real);
+		bool IsNicknameExist(const std::string &nick);
+		void setisAuthed(bool b) { _isAuthedBool = b;}
 		void quit();
 		
 		bool operator<(const Client& rhs) const;

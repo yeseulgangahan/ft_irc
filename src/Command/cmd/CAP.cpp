@@ -12,7 +12,7 @@ static void capEND(Client &sender)
 	{
 		reply(sender, "Authentication Success!");
 		sendWelcomeMessages(sender);
-		std::cout << YELLOW << "Client " << sender.get_nick() << "(fd " << sender.getClientFd() << ")" << " Connected" << RESET << std::endl;
+		std::cout << YELLOW << "Client " << sender.getNick() << "(fd " << sender.getClientFd() << ")" << " Connected" << RESET << std::endl;
 	}
 	else
 		reply(sender, "Authentication Fail");
@@ -20,7 +20,7 @@ static void capEND(Client &sender)
 
 void CmdManager::cap(Client &sender, const Command &cmd)
 {
-	if (!require_enough_params(sender, cmd, 1, 3))	return;
+	if (!requireEnoughParams(sender, cmd, 1, 3))	return;
 	
 	std::string sub_cmd = cmd._parameters[0];
 	if (sub_cmd == "LS")

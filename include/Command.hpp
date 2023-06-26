@@ -34,7 +34,7 @@ class Command
 
 	    Command(const std::string& wholeString);
 	    std::string getWholeString(void) const;
-	    bool has_trailing(void) const;
+	    bool hasTrailing(void) const;
 	    void debug(void) const;
 };
 

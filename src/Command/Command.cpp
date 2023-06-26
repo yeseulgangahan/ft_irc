@@ -10,7 +10,7 @@ Command::Command(const std::string& wholeString) : _wholeString(wholeString)
     else
         _hasTrail = false;
 
-    std::vector<std::string> tmpVector = ft_split(wholeString.substr(0, pos), " ");
+    std::vector<std::string> tmpVector = ftSplit(wholeString.substr(0, pos), " ");
 
     _commandName = tmpVector[0];
     _parameters = std::vector<std::string>(tmpVector.begin() + 1, tmpVector.end());
@@ -19,7 +19,7 @@ Command::Command(const std::string& wholeString) : _wholeString(wholeString)
         _trail = wholeString.substr(pos + 2);
 }
 
-bool Command::has_trailing(void) const { return (_hasTrail); }
+bool Command::hasTrailing(void) const { return (_hasTrail); }
 
 std::string Command::getWholeString(void) const
 {

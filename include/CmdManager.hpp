@@ -29,34 +29,29 @@ class CmdManager
 		ChannelManager &channelManager;
 		std::string _serverPassword;
 		
-		void mode_i(Channel &channel, Client&sender, const Command &cmd);
-		void mode_o(Channel &channel, Client&sender, const Command &cmd);
-		void mode_t(Channel &channel, Client&sender, const Command &cmd);
-		void mode_k(Channel &channel, Client&sender, const Command &cmd);
-		void mode_l(Channel &channel, Client&sender, const Command &cmd);
-		void mode_state(Channel &channel, Client&sender);
-		//void names_all_channel(Client &client);
-		void send_quit_msg(Client&sender, const Command &cmd);
+		void modeInvite(Channel &channel, Client&sender, const Command &cmd);
+		void modeOperator(Channel &channel, Client&sender, const Command &cmd);
+		void modeTopic(Channel &channel, Client&sender, const Command &cmd);
+		void modeKey(Channel &channel, Client&sender, const Command &cmd);
+		void modeLimit(Channel &channel, Client&sender, const Command &cmd);
+		void modeState(Channel &channel, Client&sender);
+		void sendQuitMessage(Client&sender, const Command &cmd);
 	
 	public:
 		CmdManager(ClientManager &clientManager, ChannelManager &channelManager, const std::string &serverPassword);
 		
 		void join(Client &client, const Command &cmd);
 		
-		bool require_enough_params(Client &sender, const Command& cmd, size_t ok_min, size_t ng_min = SIZE_MAX, bool require_trailing = false);
+		bool requireEnoughParams(Client &sender, const Command& cmd, size_t ok_min, size_t ng_min = SIZE_MAX, bool require_trailing = false);
 		
-		//void hangup_quit(Client&sender);
-		std::vector<Command> parse_commands(const std::string &commands_msg);
+		std::vector<Command> parseCommands(const std::string &commands_msg);
 		void executeCommand(Client &sender, const Command &cmd);
 		void cap(Client &client, const Command &cmd);
 		void pass(Client &client, const Command& cmd);
 		void nick(Client &client, const Command& cmd);
 		void user(Client &client, const Command &cmd);
-		//void cap(Client &client);
 		void quit(Client&client, const Command &cmd);
-		//void names(Client &client, const Command& cmd);
 		void mode(Client &client, const Command& cmd);
-		//void PONG(Client &client, std::vector<std::string> &server_name);
 		void privmsg(Client& client, const Command &cmd);
 		void kick(Client &client, const Command& cmd);
 		void invite(Client& sender, const Command& cmd);
@@ -66,15 +61,15 @@ class CmdManager
 		void who(Client &client, const Command& cmd);
 		void notice(Client &client, const Command& cmd);
 
-		bool require_authed(Client &client);
-		bool require_nick_user(Client &client);
+		bool requireAuthed(Client &client);
+		bool requireNickUser(Client &client);
 
-		void plus_option(Channel &channel, Client &sender, const Command &cmd);
-		void minus_option(Channel &channel, Client &sender, const Command &cmd);
+		void plusOption(Channel &channel, Client &sender, const Command &cmd);
+		void minusOption(Channel &channel, Client &sender, const Command &cmd);
 };
 
-std::vector<std::string> ft_split(const std::string& s, const std::vector<std::string>& t);
-std::vector<std::string> ft_split(const std::string& s, const std::string& t);
+std::vector<std::string> ftSplit(const std::string& s, const std::vector<std::string>& t);
+std::vector<std::string> ftSplit(const std::string& s, const std::string& t);
 std::vector<std::string> splitByLines(const std::string& s);
 
 #endif

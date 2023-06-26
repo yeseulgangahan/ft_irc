@@ -1,21 +1,21 @@
 #include "../../include/Channel.hpp"
 
-void Channel::mode_i_state(Client &client)
+void Channel::modeInviteState(Client &client)
 {
     if (!requireSenderOnChannel(client))
         return;
-    reply(client, RPL_CHANNELMODEIS(client, (*this), (_modeInvited ? "+i" : "-i"), ""));
+    reply(client, RPL_CHANNELMODEIS(client, (*this), (_modeInvite ? "+i" : "-i"), ""));
 }
 
-void Channel::mode_i(const Command &cmd, Client &sender, bool valid)
+void Channel::modeInvite(const Command &cmd, Client &sender, bool valid)
 {
     if (!requireOperator(sender))
         return;
-    _modeInvited = valid;
+    _modeInvite = valid;
     broadcast(sender,  REP_CMD(sender, cmd));
 }
 
-void Channel::mode_o(const Command &cmd, Client &sender, bool valid, Client &target)
+void Channel::modeOperator(const Command &cmd, Client &sender, bool valid, Client &target)
 {
     if (!requireOperator(sender))
         return;
@@ -35,12 +35,12 @@ void Channel::mode_o(const Command &cmd, Client &sender, bool valid, Client &tar
     }
 }
 
-void Channel::mode_t_state(Client &sender)
+void Channel::modeTopicState(Client &sender)
 {
     reply(sender, getTopicReplyString(sender));
 }
 
-void Channel::mode_t(const Command &cmd, Client &sender, bool valid)
+void Channel::modeTopic(const Command &cmd, Client &sender, bool valid)
 {
     if (!requireOperator(sender))
         return;
@@ -48,7 +48,7 @@ void Channel::mode_t(const Command &cmd, Client &sender, bool valid)
     broadcast(sender,  REP_CMD(sender, cmd));
 }
 
-void Channel::mode_k_state(Client &sender)
+void Channel::modeKey(Client &sender)
 {
     if (!requireSenderOnChannel(sender))
         return;
@@ -60,7 +60,7 @@ void Channel::mode_k_state(Client &sender)
     reply(sender, RPL_CHANNELMODEIS(sender, (*this), mode, ""));
 }
 
-void Channel::mode_k_add(const Command &cmd, Client &sender, const std::string &new_pass)
+void Channel::modeKeyAdd(const Command &cmd, Client &sender, const std::string &new_pass)
 {
     if (!requireOperator(sender))
         return;
@@ -68,7 +68,7 @@ void Channel::mode_k_add(const Command &cmd, Client &sender, const std::string &
     broadcast(sender,  REP_CMD(sender, cmd));
 }
 
-void Channel::mode_k_rem(const Command &cmd, Client &sender)
+void Channel::modeKeyRemove(const Command &cmd, Client &sender)
 {
     if (!requireOperator(sender))
         return;
@@ -76,7 +76,7 @@ void Channel::mode_k_rem(const Command &cmd, Client &sender)
     broadcast(sender,  REP_CMD(sender, cmd));
 }
 
-void Channel::mode_l_state(Client &sender)
+void Channel::modeLimitState(Client &sender)
 {
     if (!requireSenderOnChannel(sender))
         return;
@@ -99,7 +99,7 @@ static bool checkDigit(std::string string)
 	return (true);
 }
 
-bool Channel::require_valid_num(Client &sender, const std::string &string)
+bool Channel::requireValidNum(Client &sender, const std::string &string)
 {
     if (!checkDigit(string))
     {
@@ -109,22 +109,22 @@ bool Channel::require_valid_num(Client &sender, const std::string &string)
     return true;
 }
 
-void Channel::mode_l_add(const Command &cmd, Client &sender, const std::string &string)
+void Channel::modeLimitAdd(const Command &cmd, Client &sender, const std::string &string)
 {
     if (!requireOperator(sender))
         return;
-    if (!require_valid_num(sender, string))
+    if (!requireValidNum(sender, string))
         return;
     _modeLimit = true;
     _limitNum = std::atoi(string.c_str());
-    broadcast(sender,  REP_CMD(sender, cmd));
+    broadcast(sender, REP_CMD(sender, cmd));
 }
 
-void Channel::mode_l_rem(const Command &cmd, Client &sender)
+void Channel::modeLimitRemove(const Command &cmd, Client &sender)
 {
     if (!requireOperator(sender))
         return;
     _modeLimit = false;
     _limitNum = 0;
-    broadcast(sender,  REP_CMD(sender, cmd));
+    broadcast(sender, REP_CMD(sender, cmd));
 }

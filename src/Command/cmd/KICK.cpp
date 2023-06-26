@@ -3,19 +3,19 @@
 //KICK #channel nick
 void CmdManager::kick(Client &sender, const Command& cmd)
 {
-	if (!require_authed(sender) && !require_nick_user(sender) && \
-		!require_enough_params(sender, cmd, 2, 3))
+	if (!requireAuthed(sender) && !requireNickUser(sender) && \
+		!requireEnoughParams(sender, cmd, 2, 3))
 		return;
 
 	std::string channel_name = cmd._parameters[0];
-	std::string kick_user_name = cmd._parameters[1];
+	std::string kick_userName = cmd._parameters[1];
 
-	if (!channelManager.require_exist_channel(sender, channel_name) && \
-		!clientManager.require_exist_nick(sender, kick_user_name))
+	if (!channelManager.requireExistChannel(sender, channel_name) && \
+		!clientManager.requireExistNick(sender, kick_userName))
 		return;
 
-	Channel& channel = channelManager.get_channel(channel_name);
-	Client &ban_user = clientManager.get_client_by_nick(kick_user_name);
+	Channel& channel = channelManager.getChannel(channel_name);
+	Client &banUser = clientManager.getClientByNick(kick_userName);
 	
-	channel.kick(cmd, sender, ban_user);
+	channel.kick(cmd, sender, banUser);
 }
