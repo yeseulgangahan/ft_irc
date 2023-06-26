@@ -35,13 +35,13 @@ void Server::receiveCommand(Client &sender, const size_t &i)
 {
 	try
 	{
-		sender.commandBuffer.appendToBuf(recvMessage(sender));
-		while (sender.commandBuffer.hasCommand())
-			cmdManager.executeCommand(sender, sender.commandBuffer.makeCommand());
+		sender.appendToRecvBuffer(recvMessage(sender));
+		while (sender.hasCommand())
+			cmdManager.executeCommand(sender, sender.makeCommand());
 	}
 	catch(const std::exception& e)
 	{
-		_clientManager.deleteClient(_clientManager.getClientByFd(_pollFds[i].fd), _channelManager);
+		_clientManager.deleteClient(_clientManager.getClient(_pollFds[i].fd), _channelManager);
 		_pollFds.erase(_pollFds.begin() + i);
 	}
 }
@@ -67,7 +67,7 @@ void Server::addNewPoll(int socketFd)
 	struct pollfd newPollFd;
 
 	newPollFd.fd = socketFd;
-	newPollFd.events = POLLIN;
+	newPollFd.events = POLLIN | POLLOUT | POLLERR | POLLHUP;
 	newPollFd.revents = 0;
 
 	_pollFds.push_back(newPollFd);
@@ -87,11 +87,15 @@ void Server::PollLoop(void)
 
 			if (_pollFds[i].revents & (POLLERR | POLLHUP | 32))
 			{
-				_clientManager.deleteClient(_clientManager.getClientByFd(_pollFds[i].fd), _channelManager);
+				_clientManager.deleteClient(_clientManager.getClient(_pollFds[i].fd), _channelManager);
 				_pollFds.erase(_pollFds.begin() + i);
 			}
 			else if (_pollFds[i].revents & POLLIN)
-				(_pollFds[i].fd == _serverSocket) ? connectNewClient() : receiveCommand(_clientManager.getClientByFd(_pollFds[i].fd), i);
+				(_pollFds[i].fd == _serverSocket) ? connectNewClient() : receiveCommand(_clientManager.getClient(_pollFds[i].fd), i);
+			else if (_pollFds[i].revents & POLLOUT)
+			{
+				_clientManager.getClient(_pollFds[i].fd).sendMessages();
+			}
 		}
 	}
 }

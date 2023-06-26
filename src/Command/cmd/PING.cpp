@@ -4,7 +4,7 @@ static void pong(Client &sender, const Command &cmd)
 {
 	std::string msg = cmd._parameters[0];
 	
-	reply(sender, PONG_MSG(msg));
+	sender.appendToSendBuffer(PONG_MSG(msg));
 }
 
 void CmdManager::ping(Client &sender, const Command& cmd)

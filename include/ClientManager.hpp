@@ -24,9 +24,8 @@ public:
 
 	std::map<int, Client>::iterator findClientByNick(const std::string & nick);
 	
-	Client& getClientByFd(int fd);
-	Client& getClientByNick(const std::string &nickname);
-	
+	Client& getClient(int fd);
+	Client& getClient(const std::string &nickname);
 	
 	const std::vector<Client> getConnectClients();
 	

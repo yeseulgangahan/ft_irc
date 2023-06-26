@@ -96,7 +96,7 @@ const std::string serverName = "ft_IRC";
 #define ERR_NOTONCHANNEL(sender, ch) RPL_NICK_MSG(sender, "442", ch.getName(), "You're not on that channel")
 
 
-void reply(const Client &receiver, const std::string &message);
-void sendWelcomeMessages(const Client &receiver);
+// void reply(const Client &receiver, const std::string &message);
+// void sendWelcomeMessages(const Client &receiver);
 
 #endif 

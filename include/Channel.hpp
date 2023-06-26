@@ -12,7 +12,7 @@
 #include "Message.hpp"
 #include "Command.hpp"
 
-typedef std::set<Client>::iterator client_it;
+typedef std::set<Client>::iterator clientIter;
 
 class Channel
 {
@@ -41,12 +41,12 @@ private:
 
     // 체크하고 에러 답장
     bool requireOperator(Client& sender) const;
-    bool requireSenderOnChannel(const Client& sender) const;
+    bool requireSenderOnChannel(Client& sender) const;
     bool requireTargetInChannel(Client& sender, Client &target) const;
     
 public:
     //생성자
-    Channel(const Command& cmd, const std::string &name, const Client& client, const std::string &pwd);
+    Channel(const Command& cmd, const std::string &name, Client& client, const std::string &pwd);
     
     //기본 getter
     std::string getName() const;
@@ -65,9 +65,9 @@ public:
     void addInvitedList(const Command&cmd, Client &sender, Client& target);
 
     //클라이언트에게 행동
-    void broadcast(const Client& sender, std::string message) const;
-    void broadcastExceptSender(const Client& sender, std::string message) const;
-    void replyNamesCommend(const Client& sender) const;
+    void broadcast(Client& sender, const std::string &message);
+    void broadcastExceptSender(Client& sender, const std::string &message);
+    void replyNamesCommend(Client& sender) const;
     void showTopic(Client &sender);
     
     void modeInviteState(Client &client);

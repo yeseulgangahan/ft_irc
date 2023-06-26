@@ -3,21 +3,25 @@
 
 static void capLS(Client &sender)
 {
-	reply(sender, CAP_LS);
+	sender.appendToSendBuffer(CAP_LS);
 }
 
 static void capEND(Client &sender)
+// 기능협상 지원하지 않는 서버는, NICK, USER를 보내서 등록을 완료한다. 우리 클라이언트는 CAP END를 보내긴 하나 논리적으로 고민됨. 수정할 경우 NICK, USER 둘 중 하나에서 아래 내용 추가.
 {
 	if (sender.isAuthed() && sender.isNicknameSetted() && sender.isUserSetted())
 	{
-		sendWelcomeMessages(sender);
-		sender.setIsRegistrationDone();//메시지 다 보내고 등록 종료
-		reply(sender, "Registration Success!");//인증: 패스워드, 등록: 패스 닉 유저
+		sender.setIsRegistrationDone();//등록 종료
+		sender.appendToSendBuffer("Registration Success!");//인증: 패스워드, 등록: 패스 닉 유저
+		sender.appendToSendBuffer(RPL_WELCOME(sender));
+		sender.appendToSendBuffer(RPL_YOURHOST(sender));
+		// sender.appendToSendBuffer(RPL_CREATED(sender));
+		// sender.appendToSendBuffer(RPL_MYINFO(sender));
 		std::cout << YELLOW << "Client " << sender.getNick() << "(fd " << sender.getFd() << ")" << " Connected" << RESET << std::endl;
 	}
 	else
 	{
-		reply(sender, "Registration Fail");
+		sender.appendToSendBuffer("Registration Fail");
 		throw std::exception();
 	}
 }

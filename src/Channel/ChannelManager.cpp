@@ -73,7 +73,7 @@ bool ChannelManager::requireValidChannelName(Client &client, const std::string &
 {
 	if ((channel_name == "" || channel_name[0] != '#' || channel_name == "#"))
 	{
-		reply(client, ERR_NOSUCHCHANNEL(client, channel_name));
+		client.appendToSendBuffer(ERR_NOSUCHCHANNEL(client, channel_name));
 		return false;
 	}
 	return true;
@@ -83,7 +83,7 @@ bool ChannelManager::requireExistChannel(Client &client, const std::string & cha
 {
 	if (!isChannelExist(channel_name))
 	{
-		reply(client, ERR_NOSUCHCHANNEL(client, channel_name));
+		client.appendToSendBuffer(ERR_NOSUCHCHANNEL(client, channel_name));
 		return false;
 	}
 	return true;
@@ -113,14 +113,14 @@ std::set<Client> ChannelManager::get_same_channel_clients(Client&sender)
 	return clients;
 }
 
-void ChannelManager::cmd_reply_to_same_channel(Client&sender, const Command &cmd)
+void ChannelManager::cmdReplyToSameChannel(Client &sender, const Command &cmd)
 {
 	const std::set<Client> &receivers = get_same_channel_clients(sender);
-	for (client_it it = receivers.begin(); it != receivers.end(); ++it)
+	for (clientIter it = receivers.begin(); it != receivers.end(); ++it)
 	{
 		Client receiver = *it;
     	if (receiver == sender)
 			continue;
-		reply(receiver, REP_CMD(sender, cmd));
+		receiver.appendToSendBuffer(REP_CMD(sender, cmd));
 	}
 }

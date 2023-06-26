@@ -72,9 +72,9 @@ void CmdManager::executeCommand(Client &sender, const Command &cmd)
 		//인증 전에는 커맨드를 아예 받지 않아야 한다. 우리 클라이언트는 안 보내준다. nc를 위해 안 됐어도 알려준다.
 		default :
 					if (sender.isRegistrationDone())//인증완료된 아이는 아래의 에러메시지
-					{   reply(sender, ERR_UNKNOWNCOMMAND(sender, cmd._commandName));	break;	}
+					{   sender.appendToSendBuffer(ERR_UNKNOWNCOMMAND(sender, cmd._commandName));	break;	}
 					else//인증 아직 안 됐으면
-					{   reply(sender, ERR_NOTREGISTERED(sender));	break;   }
+					{   sender.appendToSendBuffer(ERR_NOTREGISTERED(sender));	break;   }
 	}
 }
 
@@ -83,7 +83,7 @@ bool CmdManager::requireAuthed(Client &client)
 {
 	if (!client.isAuthed())
 	{
-		reply(client, RPL_NONE("Authentication Failed. Try /connect"));
+		client.appendToSendBuffer(RPL_NONE("Authentication Failed. Try /connect"));
 		return false;
 	}
 	return true;
@@ -94,7 +94,7 @@ bool CmdManager::requireNickUser(Client &client)
 {
 	if (!client.isRegistrationDone())
 	{
-		reply(client, ERR_NOTREGISTERED(client));
+		client.appendToSendBuffer(ERR_NOTREGISTERED(client));
 		return false;
 	}
 	return true;
@@ -113,7 +113,7 @@ bool CmdManager::requireEnoughParams(Client &sender, const Command& cmd, size_t 
 
 	if (!ok)
 	{
-		reply(sender, ERR_NEEDMOREPARAMS(sender, cmd._commandName));
+		sender.appendToSendBuffer(ERR_NEEDMOREPARAMS(sender, cmd._commandName));
 		return false;
 	}
 	return true;
@@ -143,10 +143,10 @@ void CmdManager::plusOption(Channel &channel, Client &sender, const Command &cmd
 							
 						if (no_arg)
 							channel.modeOperator(cmd, sender, true, \
-							clientManager.getClientByNick(cmd._parameters[1 + i - no_arg]));
+							clientManager.getClient(cmd._parameters[1 + i - no_arg]));
 						else
 							channel.modeOperator(cmd, sender, true, \
-							clientManager.getClientByNick(cmd._parameters[1 + i]));
+							clientManager.getClient(cmd._parameters[1 + i]));
 																		break;
 			case 't':
 						no_arg++;
@@ -194,7 +194,7 @@ void CmdManager::minusOption(Channel &channel, Client &sender, const Command &cm
 						if (!clientManager.requireExistNick(sender, cmd._parameters[2]))
 							return;
 						channel.modeOperator(cmd, sender, false, \
-						clientManager.getClientByNick(cmd._parameters[2]));
+						clientManager.getClient(cmd._parameters[2]));
 																		break;
 			case 't':
 						if (!requireEnoughParams(sender, cmd, 2, 6))

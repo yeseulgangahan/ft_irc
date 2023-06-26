@@ -7,7 +7,7 @@ static bool require_valid_param(Client &client, const Command &cmd, CmdManager &
 	if (cmd._parameters.size() == 0)
 	{
 		if(reply_require == recv_reply)
-			reply(client, ERR_NORECIPIENT(client, cmd.getWholeString()));
+			client.appendToSendBuffer(ERR_NORECIPIENT(client, cmd.getWholeString()));
 		is_ok = false;
 	}
 	else if (!cmdManager.requireEnoughParams(client, cmd, 1, 2))
@@ -17,7 +17,7 @@ static bool require_valid_param(Client &client, const Command &cmd, CmdManager &
 	if (!cmd.hasTrailing())
 	{
 		if(reply_require == recv_reply)
-			reply(client, ERR_NOTEXTTOSEND(client));
+			client.appendToSendBuffer(ERR_NOTEXTTOSEND(client));
 		is_ok = false;	
 	}
 	return is_ok;

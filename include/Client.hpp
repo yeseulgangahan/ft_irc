@@ -11,7 +11,7 @@
 #include <map>
 #include <cassert>
 #include <cstring>
-#include "CmdBuffer.hpp"
+#include "Command.hpp"
 
 # define RESET "\033[0m"
 # define GREEN "\033[0;32m"
@@ -22,7 +22,6 @@
 class Client
 {
 	private:
-		size_t	_id; 
 		int		_fd;
 		
 		std::string _userName;
@@ -35,9 +34,10 @@ class Client
 		bool _isUserSetted;
 		bool _isRegistrationDone;
 	
-	public:
-		CmdBuffer commandBuffer;
+		std::string _recvBuffer;
+		std::string _sendBuffer;
 
+	public:
 		int getFd() const;
 		std::string getUserName() const;
 		std::string getRealName() const;
@@ -55,9 +55,18 @@ class Client
 		bool isUserSetted();
 		bool isRegistrationDone();
 		bool isNicknameExist(const std::string &nick);
+
+		// recvBuffer 관련
+		void appendToRecvBuffer(const std::string &s);
+		bool hasCommand();
+		Command makeCommand();
+
+		//sendBuffer 관련
+		void appendToSendBuffer(const std::string &s);
+		void sendMessages();
 		
-		Client();// 언제 사용되지?
-		Client(int fd, const std::string &nc);//nc 뭐지?
+		Client();
+		Client(int fd);
 		~Client();
 		
 		void quit();

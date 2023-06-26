@@ -1,6 +1,6 @@
 #include "../../include/Channel.hpp"
 
-Channel::Channel(const Command& cmd, const std::string &name, const Client& client, const std::string &pwd)
+Channel::Channel(const Command& cmd, const std::string &name, Client& client, const std::string &pwd)
     :_name(name), \
     _password(pwd), \
     _topic(""), \
@@ -14,7 +14,7 @@ Channel::Channel(const Command& cmd, const std::string &name, const Client& clie
     _operators.insert(client);
     
     broadcast(client,  REP_CMD(client, cmd));
-    reply(client, getTopicReplyString(client));
+    client.appendToSendBuffer(getTopicReplyString(client));
     replyNamesCommend(client);
 }
 
@@ -35,7 +35,7 @@ bool Channel::requireOperator(Client& sender) const
 {
 	if (!isOperator(sender))
 	{
-        reply(sender, ERR_CHANOPRIVSNEEDED((*this)));
+        sender.appendToSendBuffer(ERR_CHANOPRIVSNEEDED((*this)));
 		return false;
 	}
 	return true;
@@ -45,17 +45,17 @@ bool Channel::requireTargetInChannel(Client& sender, Client &target) const
 {
     if (!isMember(target))
 	{
-        reply(sender, ERR_USERNOTINCHANNEL(sender, target, (*this)));
+        sender.appendToSendBuffer(ERR_USERNOTINCHANNEL(sender, target, (*this)));
         return false;
 	}
 	return true;
 }
 
-bool Channel::requireSenderOnChannel(const Client& sender) const
+bool Channel::requireSenderOnChannel(Client& sender) const
 {
     if (!isMember(sender))
 	{
-        reply(sender, ERR_NOTONCHANNEL(sender, (*this)));
+        sender.appendToSendBuffer(ERR_NOTONCHANNEL(sender, (*this)));
         return false;
 	}
     return true;
@@ -143,22 +143,22 @@ void Channel::addMember(const Command& cmd, Client& sender, const std::string & 
     if (isMember(sender)) return ;
     if (_modeInvite && (_invited.find(sender) == _invited.end()))
     {
-        reply(sender, ERR_INVITEONLYCHAN(sender, (*this)));
+        sender.appendToSendBuffer(ERR_INVITEONLYCHAN(sender, (*this)));
         return ;
     }
     if (_modeLimit && (_limitNum < _members.size() + 1))
     {
-        reply(sender, ERR_CHANNELISFULL(sender, (*this)));
+        sender.appendToSendBuffer(ERR_CHANNELISFULL(sender, (*this)));
         return ;
     }
     if (_modeKey && (_password != pass))
     {
-        reply(sender, ERR_BADCHANNELKEY(sender, (*this)));
+        sender.appendToSendBuffer(ERR_BADCHANNELKEY(sender, (*this)));
         return ;
     }
     _members.insert(sender);
     broadcast(sender, REPLY(sender.getUserString(), cmd._commandName, _name, ""));
-    reply(sender,getTopicReplyString(sender));
+    sender.appendToSendBuffer(getTopicReplyString(sender));
     replyNamesCommend(sender);
 }
 
@@ -166,29 +166,29 @@ void Channel::setTopic(const Command& cmd, Client &sender, const std::string &to
 {
     if (_modeTopic && !requireOperator(sender)) return;
     _topic = topic;
-    reply(sender, getTopicReplyString(sender));
+    sender.appendToSendBuffer(getTopicReplyString(sender));
     broadcastExceptSender(sender,  REP_CMD(sender, cmd));
 }
 
-void Channel::broadcast(const Client& sender, std::string message) const
-{
+void Channel::broadcast(Client& sender, const std::string &message)
+{(void)message;
     if (!requireSenderOnChannel(sender))return;
-    for (client_it receiver = _members.begin(); receiver != _members.end(); ++receiver)
-        reply(*receiver, message);
+    // for (clientIter receiver = _members.begin(); receiver != _members.end(); ++receiver)
+        // (*receiver).appendToRecvBuffer(message);
 }
 
-void Channel::broadcastExceptSender(const Client& sender, std::string message) const
-{
-    if (!requireSenderOnChannel(sender))return;
-    for (client_it receiver = _members.begin(); receiver != _members.end(); ++receiver)
+void Channel::broadcastExceptSender(Client& sender, const std::string &message)
+{(void)message;
+    if (!requireSenderOnChannel(sender)) return;
+    for (clientIter receiver = _members.begin(); receiver != _members.end(); ++receiver)
     {
         if (*receiver == sender) 
             continue;
-        reply(*receiver, message);
+        // (*receiver).appendToRecvBuffer(message);
     }
 }
 
-void Channel::replyNamesCommend(const Client &sender) const
+void Channel::replyNamesCommend(Client &sender) const
 {
 	//get_name_list: tiger @rabbit dog
 	std::string msg = "";
@@ -200,14 +200,14 @@ void Channel::replyNamesCommend(const Client &sender) const
 		msg += clentIter->getNick();
 	}
 
-	reply(sender, RPL_NAMREPLY(sender, (getName()), msg));
-	reply(sender, RPL_ENDOFNAMES(sender, (getName())));
+	sender.appendToSendBuffer(RPL_NAMREPLY(sender, (getName()), msg));
+	sender.appendToSendBuffer(RPL_ENDOFNAMES(sender, (getName())));
 }
 
 void Channel::showTopic(Client &sender)
 {
     if (!requireSenderOnChannel(sender)) return;
-    reply(sender, getTopicReplyString(sender));
+    sender.appendToSendBuffer(getTopicReplyString(sender));
 }
 
 void Channel::addInvitedList(const Command &cmd, Client &sender, Client& target)
@@ -215,12 +215,12 @@ void Channel::addInvitedList(const Command &cmd, Client &sender, Client& target)
 	if (!requireOperator(sender)) return;
 	if (isMember(target))
 	{
-        reply(sender, ERR_USERONCHANNEL(sender, target, (*this)));
+        sender.appendToSendBuffer(ERR_USERONCHANNEL(sender, target, (*this)));
 		return ;
 	}
 	_invited.insert(target);
-	reply(sender, RPL_INVITING(sender, target, (*this)));
-	reply(target, REP_CMD(sender, cmd));
+	sender.appendToSendBuffer(RPL_INVITING(sender, target, (*this)));
+	target.appendToSendBuffer(REP_CMD(sender, cmd));
 }
 
 void Channel::ejectMember(const Command&cmd, Client &sender, Client& banUser)

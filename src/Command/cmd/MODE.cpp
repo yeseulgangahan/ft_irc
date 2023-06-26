@@ -22,7 +22,7 @@ void CmdManager::modeOperator(Channel &channel, Client &sender, const Command &c
 	std::string targetNick = cmd._parameters[2];
 	if (!clientManager.requireExistNick(sender, targetNick))
 		return;
-	Client &target = clientManager.getClientByNick(targetNick);
+	Client &target = clientManager.getClient(targetNick);
 	if (flag == MODE_O_ADD)
 		channel.modeOperator(cmd, sender, true, target);
 	else if (flag == MODE_O_REM)
@@ -90,7 +90,7 @@ void CmdManager::modeLimit(Channel &channel, Client &sender, const Command &cmd)
 
 void CmdManager::modeState(Channel &channel, Client &sender)
 {
-	reply(sender, RPL_CHANNELMODEIS(sender, channel, channel. getModeString(), ""));
+	sender.appendToSendBuffer(RPL_CHANNELMODEIS(sender, channel, channel. getModeString(), ""));
 }
 
 void CmdManager::mode(Client &sender, const Command &cmd)

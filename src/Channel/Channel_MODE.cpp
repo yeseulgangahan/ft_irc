@@ -4,7 +4,7 @@ void Channel::modeInviteState(Client &client)
 {
     if (!requireSenderOnChannel(client))
         return;
-    reply(client, RPL_CHANNELMODEIS(client, (*this), (_modeInvite ? "+i" : "-i"), ""));
+    client.appendToSendBuffer(RPL_CHANNELMODEIS(client, (*this), (_modeInvite ? "+i" : "-i"), ""));
 }
 
 void Channel::modeInvite(const Command &cmd, Client &sender, bool valid)
@@ -37,7 +37,7 @@ void Channel::modeOperator(const Command &cmd, Client &sender, bool valid, Clien
 
 void Channel::modeTopicState(Client &sender)
 {
-    reply(sender, getTopicReplyString(sender));
+    sender.appendToSendBuffer(getTopicReplyString(sender));
 }
 
 void Channel::modeTopic(const Command &cmd, Client &sender, bool valid)
@@ -57,7 +57,7 @@ void Channel::modeKey(Client &sender)
         mode = "-k";
     else
         mode = "+k";
-    reply(sender, RPL_CHANNELMODEIS(sender, (*this), mode, ""));
+    sender.appendToSendBuffer(RPL_CHANNELMODEIS(sender, (*this), mode, ""));
 }
 
 void Channel::modeKeyAdd(const Command &cmd, Client &sender, const std::string &new_pass)
@@ -82,7 +82,7 @@ void Channel::modeLimitState(Client &sender)
         return;
     if (!_modeLimit)
         return;
-    reply(sender, RPL_CHANNELMODEIS(sender, (*this), "+l", std::to_string(_limitNum)));
+    sender.appendToSendBuffer(RPL_CHANNELMODEIS(sender, (*this), "+l", std::to_string(_limitNum)));
 }
 
 static bool checkDigit(std::string string)
@@ -105,7 +105,7 @@ void Channel::modeLimitAdd(const Command &cmd, Client &sender, const std::string
         return;
     if (!checkDigit(string))
     {
-        reply(sender, ERR_NEEDMOREPARAMS(sender, "MODE " + getName() + " +l " + string));
+        sender.appendToSendBuffer(ERR_NEEDMOREPARAMS(sender, "MODE " + getName() + " +l " + string));
         return ;
     }
     _modeLimit = true;

@@ -15,7 +15,7 @@ void CmdManager::kick(Client &sender, const Command& cmd)
 		return;
 
 	Channel& channel = channelManager.getChannel(channel_name);
-	Client &banUser = clientManager.getClientByNick(kick_userName);
+	Client &banUser = clientManager.getClient(kick_userName);
 	
 	channel.ejectMember(cmd, sender, banUser);
 }

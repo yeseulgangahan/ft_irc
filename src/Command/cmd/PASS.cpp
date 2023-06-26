@@ -5,7 +5,7 @@ static bool hasOnePasswordParameter(Client &client, const Command& cmd)
 {
 	if (cmd._parameters.size() != 1)
 	{
-		reply(client, ERR_NEEDMOREPARAMS(client, cmd._commandName));
+		client.appendToSendBuffer(ERR_NEEDMOREPARAMS(client, cmd._commandName));
 		return (false);
 	}
 
@@ -16,7 +16,7 @@ static bool isNewClient(Client &client)
 {
 	if (client.isAuthed())
 	{
-		reply(client, ERR_ALREADYREGISTRED(client));
+		client.appendToSendBuffer(ERR_ALREADYREGISTRED(client));
 		return (false);
 	}
 	return (true);
@@ -26,7 +26,7 @@ static bool isInputPasswordCorrect(Client &client, const std::string & inputPass
 {
 	if (inputPassword != serverPassword)
 	{
-		reply(client, ERR_PASSWDMISMATCH(client));
+		client.appendToSendBuffer(ERR_PASSWDMISMATCH(client));
 		return (false);
 	}
 	return (true);
@@ -41,5 +41,5 @@ void CmdManager::pass(Client &client, const Command& cmd)
 	if (!isInputPasswordCorrect(client, password, _serverPassword)) return;
 	
 	client.setIsAuthed();
-	reply(client, RPL_NONE("Password Correct!"));
+	client.appendToSendBuffer(RPL_NONE("Password Correct!"));
 }

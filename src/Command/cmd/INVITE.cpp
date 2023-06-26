@@ -15,7 +15,7 @@ void CmdManager::invite(Client& sender, const Command& cmd)
 		!channelManager.requireExistChannel(sender, channel_name))
 		return;
 	
-	Client& target_user = clientManager.getClientByNick(targetUserName);
+	Client& target_user = clientManager.getClient(targetUserName);
 	Channel& channel = channelManager.getChannel(channel_name);
 
 	channel.addInvitedList(cmd, sender, target_user);

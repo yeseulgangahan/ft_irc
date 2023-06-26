@@ -2,7 +2,7 @@
 
 void CmdManager::sendQuitMessage(Client&sender, const Command &cmd)
 {
-	channelManager.cmd_reply_to_same_channel(sender, cmd);
+	channelManager.cmdReplyToSameChannel(sender, cmd);
 }
 
 void CmdManager::quit(Client&client, const Command &cmd)

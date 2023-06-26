@@ -4,7 +4,7 @@ static bool require_yet_set_user(Client &client)
 {
 	if (client.isUserSetted())
 	{
-		reply(client, ERR_ALREADYREGISTRED(client));
+		client.appendToSendBuffer(ERR_ALREADYREGISTRED(client));
 		return false;
 	}
 	return true;

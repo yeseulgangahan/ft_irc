@@ -36,7 +36,7 @@ public:
 	bool requireExistChannel(Client &client, const std::string & channel_name);
 
 	// 합칠 예정
-	void cmd_reply_to_same_channel(Client &sender, const Command &cmd);
+	void cmdReplyToSameChannel(Client &sender, const Command &cmd);
 	
 };
 #endif

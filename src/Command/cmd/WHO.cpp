@@ -9,10 +9,10 @@ static void send_who_reply(Client &sender, Channel &channel)
 {
 	std::set<Client> members = channel.getMembers();
 
-	for (client_it it = members.begin(); it != members.end(); it++)
-		reply(sender, RPL_WHOREPLY(sender, channel, (*it)));
+	for (clientIter it = members.begin(); it != members.end(); it++)
+		sender.appendToSendBuffer(RPL_WHOREPLY(sender, channel, (*it)));
 
-	reply(sender, RPL_ENDOFWHO(sender, channel));
+	sender.appendToSendBuffer(RPL_ENDOFWHO(sender, channel));
 }
 
 void CmdManager::who(Client &sender, const Command &cmd)

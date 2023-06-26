@@ -21,11 +21,10 @@
 class CmdBuffer
 {
 	private:
-		std::string _commandBuffer;
-		std::string trimSource(std::string s);
+		std::string _recvBuffer;
 
 	public:
-		void appendToBuf(std::string s);
+		void appendToRecvBuffer(std::string s);
 		bool hasCommand(void);
 		Command makeCommand(void);
 
