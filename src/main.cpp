@@ -3,6 +3,7 @@
 #include "../include/Client.hpp"
 #include "../include/Channel.hpp"
 #include "../include/ChannelManager.hpp"
+#include "../include/CmdManager.hpp"
 #include <cstdlib>
 
 Server *server;

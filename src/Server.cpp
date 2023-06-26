@@ -12,7 +12,7 @@ void Server::closeAllFd(void)
 		close(clients[i].getClientFd());
 	}
 	close(_serverSocket);
-	std::cout << "close all fd" << std::endl;
+	std::cout << "All Socket Closed" << std::endl;
 }
 
 static std::string recvMessage(Client &client)
@@ -31,11 +31,19 @@ static std::string recvMessage(Client &client)
 	return buf;
 }
 
-void Server::receiveCommand(Client &sender)
+void Server::receiveCommand(Client &sender, const size_t &i)
 {
-	sender.commandBuffer.appendToBuf(recvMessage(sender));
-	while (sender.commandBuffer.hasCommand())
-		cmdManager.executeCommand(sender, sender.commandBuffer.makeCommand());
+	try
+	{
+		sender.commandBuffer.appendToBuf(recvMessage(sender));
+		while (sender.commandBuffer.hasCommand())
+			cmdManager.executeCommand(sender, sender.commandBuffer.makeCommand());
+	}
+	catch(const std::exception& e)
+	{
+		_clientManager.deleteClient(_clientManager.getClientByFd(_pollFds[i].fd), _channelManager);
+		_pollFds.erase(_pollFds.begin() + i);
+	}
 }
 
 void Server::connectNewClient(void)
@@ -65,12 +73,10 @@ void Server::addNewPoll(int socketFd)
 	_pollFds.push_back(newPollFd);
 }
 
-//패스워드 틀리는 경우 pollfd가 erase되지 않는 문제 존재. 이후 패스워드 맞게되면 poll은 +1개가 된다.
 void Server::PollLoop(void)
 {
 	while (1)
 	{
-		//std::cout << "pollfd count: " << _pollFds.size() << std::endl;
 		if (poll(&_pollFds[0], _pollFds.size(), TIMEOUT) == -1)
 			throw std::exception();
 		
@@ -78,14 +84,14 @@ void Server::PollLoop(void)
 		{
 			if (_pollFds[i].revents == 0)
 				continue;
-			
-			if (_pollFds[i].revents & (POLLERR | POLLHUP))
+
+			if (_pollFds[i].revents & (POLLERR | POLLHUP | 32))
 			{
 				_clientManager.deleteClient(_clientManager.getClientByFd(_pollFds[i].fd), _channelManager);
 				_pollFds.erase(_pollFds.begin() + i);
 			}
 			else if (_pollFds[i].revents & POLLIN)
-				(_pollFds[i].fd == _serverSocket) ? connectNewClient() : receiveCommand(_clientManager.getClientByFd(_pollFds[i].fd));
+				(_pollFds[i].fd == _serverSocket) ? connectNewClient() : receiveCommand(_clientManager.getClientByFd(_pollFds[i].fd), i);
 		}
 	}
 }

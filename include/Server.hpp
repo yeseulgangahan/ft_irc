@@ -36,7 +36,6 @@ class Server
 		int							_serverSocket;
 		
 		void addNewPoll(int socket_fd);
-		void setSignal(void);// ??: 사용안됨
 
 	public:
 		CmdManager		cmdManager;
@@ -48,10 +47,9 @@ class Server
 		void	closeAllFd(void);
 		void	createServerSocket(void);
 		void	addClient(int socketfd);
-		void	receiveCommand(Client &client);
+		void	receiveCommand(Client &client, const size_t &i);
 		void	PollLoop(void);
 		void	connectNewClient(void);
-		void	buildIn(Client &sender, const Command &cmd);//??: 사용안됨
 };
 
 #endif

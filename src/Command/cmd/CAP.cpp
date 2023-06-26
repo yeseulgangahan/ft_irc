@@ -1,5 +1,5 @@
-#include "CmdManager.hpp"
-#include "Message.hpp"
+#include "../../../include/CmdManager.hpp"
+#include "../../../include/Message.hpp"
 
 static void capLS(Client &sender)
 {
@@ -15,7 +15,10 @@ static void capEND(Client &sender)
 		std::cout << YELLOW << "Client " << sender.getNick() << "(fd " << sender.getClientFd() << ")" << " Connected" << RESET << std::endl;
 	}
 	else
+	{
 		reply(sender, "Authentication Fail");
+		throw std::exception();
+	}
 }
 
 void CmdManager::cap(Client &sender, const Command &cmd)

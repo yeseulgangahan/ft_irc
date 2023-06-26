@@ -1,5 +1,5 @@
-#include "../include/Command.hpp"
-# include "CmdManager.hpp"
+#include "../../include/Command.hpp"
+#include "../../include/CmdManager.hpp"
 
 //TOPIC #ch1 :good~
 Command::Command(const std::string& wholeString) : _wholeString(wholeString)

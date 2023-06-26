@@ -1,4 +1,4 @@
-#include "ChannelManager.hpp"
+#include "../../include/ChannelManager.hpp"
 
 channelIter ChannelManager::getChannelIterator(std::string channelName) const
 {

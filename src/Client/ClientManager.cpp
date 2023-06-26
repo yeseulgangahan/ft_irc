@@ -1,5 +1,5 @@
-#include "ClientManager.hpp"
-#include "Message.hpp"
+#include "../../include/ClientManager.hpp"
+#include "../../include/Message.hpp"
 
 void ClientManager::addClient(int socketFd)
 {

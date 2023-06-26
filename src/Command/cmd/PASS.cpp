@@ -1,4 +1,4 @@
-#include "CmdManager.hpp"
+#include "../../../include/CmdManager.hpp"
 
 
 static bool hasOnePasswordParameter(Client &client, const Command& cmd)

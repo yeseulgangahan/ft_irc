@@ -41,8 +41,8 @@ const std::string serverName = "ft_IRC";
 // CAP END
 #define RPL_WELCOME(client) REPLY(serverName, "001", client.getNick(), "Welcome to the IRC Network " + client.getUserInfo())
 #define RPL_YOURHOST(client) REPLY(serverName, "002", client.getNick(), "Your host is " + serverName + ", running version 1.0")
-#define RPL_CREATED(client) REPLY(serverName, "003", client.getNick(), "This server was created [getTime()]")
-#define RPL_MYINFO(client) REPLY(serverName, "004", client.getNick(), serverName + " 1.0 - -")
+//#define RPL_CREATED(client) REPLY(serverName, "003", client.getNick(), "This server was created [getTime()]")
+//#define RPL_MYINFO(client) REPLY(serverName, "004", client.getNick(), serverName + " 1.0 - -")
 
 
 /* CONNECTION */

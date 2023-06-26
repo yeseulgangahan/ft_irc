@@ -79,7 +79,7 @@ bool CmdManager::requireAuthed(Client &client)
 {
 	if (!client.isAuthed())
 	{
-		reply(client, RPL_NONE("you must authenticate. by PASS <password>"));
+		reply(client, RPL_NONE("Authentication Failed. Try /connect"));
 		return false;
 	}
 	return true;

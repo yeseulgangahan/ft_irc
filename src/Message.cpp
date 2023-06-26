@@ -12,7 +12,7 @@ void sendWelcomeMessages(const Client &receiver)
 {
 	reply(receiver, RPL_WELCOME(receiver));
 	reply(receiver, RPL_YOURHOST(receiver));
-	reply(receiver, RPL_CREATED(receiver));
-	reply(receiver, RPL_MYINFO(receiver));
+	//reply(receiver, RPL_CREATED(receiver));
+	//reply(receiver, RPL_MYINFO(receiver));
 }
 
