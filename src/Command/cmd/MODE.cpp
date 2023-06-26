@@ -90,7 +90,7 @@ void CmdManager::modeLimit(Channel &channel, Client &sender, const Command &cmd)
 
 void CmdManager::modeState(Channel &channel, Client &sender)
 {
-	reply(sender, RPL_CHANNELMODEIS(sender, channel, channel. getModeString(), ""));
+	reply(sender, RPL_CHANNELMODEIS(sender, channel, channel.getModeString(), ""));
 }
 
 void CmdManager::mode(Client &sender, const Command &cmd)
@@ -111,11 +111,9 @@ void CmdManager::mode(Client &sender, const Command &cmd)
 
 	if (cmd._parameters.size() == 1)
 		modeState(channel, sender);
-
-	if (cmd._parameters[1][0] == '+')
+	else if (cmd._parameters[1][0] == '+')
 		plusOption(channel, sender, cmd);
 	else if (cmd._parameters[1][0] == '-')
 		minusOption(channel, sender, cmd);
-
 }
 // MODE #channel option [target_user]
