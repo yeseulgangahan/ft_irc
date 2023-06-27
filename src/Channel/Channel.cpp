@@ -170,21 +170,31 @@ void Channel::setTopic(const Command& cmd, Client &sender, const std::string &to
     broadcastExceptSender(sender,  REP_CMD(sender, cmd));
 }
 
-void Channel::broadcast(Client& sender, const std::string &message)
-{(void)message;
+void Channel::broadcast(Client& sender, std::string message)
+{
     if (!requireSenderOnChannel(sender))return;
-    // for (clientIter receiver = _members.begin(); receiver != _members.end(); ++receiver)
-    //     *&(receiver).appendToRecvBuffer(message);
+
+	message += "\r\n";
+    for (clientIter receiver = _members.begin(); receiver != _members.end(); ++receiver)
+	{
+        send(receiver->getFd(), message.c_str(), message.length(), 0);
+		if (!message.empty())
+			std::cout << BLUE << "To Client " << receiver->getNick() << " " << RESET << message <<std::endl;
+	}
 }
 
-void Channel::broadcastExceptSender(Client& sender, const std::string &message)
-{(void)message;
+void Channel::broadcastExceptSender(Client& sender, std::string message)
+{
     if (!requireSenderOnChannel(sender)) return;
-    for (clientIter receiver = _members.begin(); receiver != _members.end(); ++receiver)
+    
+	message += "\r\n";
+	for (clientIter receiver = _members.begin(); receiver != _members.end(); ++receiver)
     {
         if (*receiver == sender) 
             continue;
-        // (*receiver).appendToRecvBuffer(message);
+        send(receiver->getFd(), message.c_str(), message.length(), 0);
+		if (!message.empty())
+			std::cout << BLUE << "To Client " << receiver->getNick() << " " << RESET << message <<std::endl;
     }
 }
 

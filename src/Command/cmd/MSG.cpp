@@ -38,6 +38,7 @@ void CmdManager::privmsg(Client& client, const Command &cmd)
 	if (!requireAuthed(client)) return;
 	if (!requireNickUser(client)) return;
 	if (!require_valid_param(client, cmd, *this, recv_reply)) return;
+	
 	std::vector<std::string> targets = parse_targets(cmd);
 	for (size_t i = 0; i < targets.size(); i++)
 	{

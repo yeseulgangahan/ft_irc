@@ -65,8 +65,8 @@ public:
     void addInvitedList(const Command&cmd, Client &sender, Client& target);
 
     //클라이언트에게 행동
-    void broadcast(Client& sender, const std::string &message);
-    void broadcastExceptSender(Client& sender, const std::string &message);
+    void broadcast(Client& sender, std::string message);
+    void broadcastExceptSender(Client& sender, std::string message);
     void replyNamesCommend(Client& sender) const;
     void showTopic(Client &sender);
     
