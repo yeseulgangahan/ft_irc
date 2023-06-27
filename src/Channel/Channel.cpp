@@ -71,6 +71,11 @@ const std::set<Client>& Channel::getMembers() const
     return _members;
 }
 
+std::set<Client>& Channel::getOperators()
+{
+    return _operators;
+}
+
 std::string Channel::getModeString()
 {
     std::string mode = "+";
@@ -137,6 +142,23 @@ void Channel::removeMember(Client& target)
         _operators.erase(target);
 }
 
+void Channel::removeMemberCheckOperator(Client &target, const std::string &channelList)
+{
+    if (!requireSenderOnChannel(target))
+        return;
+    
+    _members.erase(target);
+    if (isOperator(target))
+    {
+        _operators.erase(target);
+        if (_operators.size() < 1 && _members.size() > 0 && !isOperator(*_members.begin()))
+        {
+            _operators.insert(*_members.begin());
+			Client &tmp = const_cast<Client &>(*getOperators().begin());
+			broadcast(tmp, REPLY(_operators.begin()->getUserString(), "MODE" + " channelList" + " +o " + _operators.begin()->getNick(), channelList, ""));
+        }
+    }
+}
 
 void Channel::addMember(const Command& cmd, Client& sender, const std::string & pass)
 {

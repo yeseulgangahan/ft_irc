@@ -51,6 +51,7 @@ public:
     //기본 getter
     std::string getName() const;
     const std::set<Client>& getMembers() const;
+	std::set<Client>& getOperators();
 
     //변형된 결과 getter
     std::string getModeString();
@@ -59,6 +60,7 @@ public:
     
     //내용 변경
     void removeMember(Client& target);
+	void removeMemberCheckOperator(Client &target, const std::string &channelList);
     void addMember(const Command&cmd, Client& sender, const std::string & pass = "");
     void ejectMember(const Command&cmd, Client &sender, Client& target);
     void setTopic(const Command&cmd, Client &sender, const std::string &topic);

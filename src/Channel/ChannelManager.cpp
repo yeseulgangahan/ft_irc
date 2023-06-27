@@ -63,7 +63,7 @@ void ChannelManager::removeDepartedClient(const Command& cmd, Client &sender, st
 		if (requireExistChannel(sender, channelList[i]))//존재하는 채널이면
 		{
 			getChannel(channelList[i]).broadcast(sender, REPLY(sender.getUserString(), cmd._commandName, channelList[i], ""));//해당 채널에서 PART 메시지를 보내야 한다
-			getChannel(channelList[i]).removeMember(sender);//떠난다
+			getChannel(channelList[i]).removeMemberCheckOperator(sender, channelList[i]);//떠난다
 
 		}
 	}
