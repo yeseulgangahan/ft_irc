@@ -23,7 +23,7 @@ public:
 	void deleteClient(Client &client, ChannelHandler& channelHandler);
 
 	std::map<int, Client>::iterator findClientByNick(const std::string & nick);
-	
+
 	Client& getClient(int fd);
 	Client& getClient(const std::string &nickname);
 	
