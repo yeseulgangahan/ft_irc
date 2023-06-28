@@ -1,12 +1,12 @@
 #include "../include/Server.hpp"
 #include "../include/Client.hpp"
 
-Server::Server(int port, std::string &password) : _port(port), _password(password), cmdManager(_clientManager, _channelManager, password) {}
+Server::Server(int port, std::string &password) : _port(port), _password(password), cmdHandler(_clientHandler, _channelHandler, password) {}
 Server::~Server() {}
 
 void Server::closeAllFd(void)
 {
-	std::vector<Client> clients = _clientManager.getConnectClients();
+	std::vector<Client> clients = _clientHandler.getConnectClients();
 	for (size_t i = 0; i < clients.size(); i++)
 	{
 		close(clients[i].getFd());
@@ -37,11 +37,11 @@ bool Server::receiveCommand(Client &sender, const size_t &i)
 	{
 		sender.appendToRecvBuffer(recvMessage(sender));
 		while (sender.hasCommand())
-			cmdManager.executeCommand(sender, sender.makeCommand());
+			cmdHandler.executeCommand(sender, sender.makeCommand());
 	}
 	catch(const std::exception& e)
 	{
-		_clientManager.deleteClient(_clientManager.getClient(_pollFds[i].fd), _channelManager);
+		_clientHandler.deleteClient(_clientHandler.getClient(_pollFds[i].fd), _channelHandler);
 		_pollFds.erase(_pollFds.begin() + i);
 		return 0;
 	}
@@ -69,7 +69,7 @@ bool Server::connectNewClient(size_t pollSize)
 			{
 				std::cout << YELLOW << "Socket fd " << clientFd << " accepted" << RESET << std::endl;
 				addNewPoll(clientFd);
-				_clientManager.addClient(clientFd);
+				_clientHandler.addClient(clientFd);
 			}
 		}
 	};
@@ -90,7 +90,11 @@ void Server::addNewPoll(int socketFd)
 
 void Server::PollLoop(void)
 {
+<<<<<<< HEAD
 	int flag = 1;
+=======
+	int flag = true;
+>>>>>>> d743227d882f5768e1fc1215b84d1a90b35ffc48
 
 	while (1)
 	{
@@ -104,18 +108,27 @@ void Server::PollLoop(void)
 
 			if (_pollFds[i].revents & (POLLERR | POLLHUP | 32))
 			{
-				_clientManager.deleteClient(_clientManager.getClient(_pollFds[i].fd), _channelManager);
+				_clientHandler.deleteClient(_clientHandler.getClient(_pollFds[i].fd), _channelHandler);
 				_pollFds.erase(_pollFds.begin() + i);
 			}
 			else
 			{
 				if (_pollFds[i].revents & POLLIN)
-					flag = (_pollFds[i].fd == _serverSocket) ? connectNewClient(_pollFds.size()) : receiveCommand(_clientManager.getClient(_pollFds[i].fd), i);
+<<<<<<< HEAD
+					flag = (_pollFds[i].fd == _serverSocket) ? connectNewClient(_pollFds.size()) : receiveCommand(_clientHandler.getClient(_pollFds[i].fd), i);
 
 				if (_pollFds[i].revents & POLLOUT && flag)
-					_clientManager.getClient(_pollFds[i].fd).sendMessages();
+					_clientHandler.getClient(_pollFds[i].fd).sendMessages();
 				else if (!flag)
 					flag = 1;
+=======
+					flag = (_pollFds[i].fd == _serverSocket) ? connectNewClient(_pollFds.size()) : receiveCommand(_clientHandler.getClient(_pollFds[i].fd), i);
+
+				if (_pollFds[i].revents & POLLOUT && flag)
+					_clientHandler.getClient(_pollFds[i].fd).sendMessages();
+				else if (!flag)
+					flag = true;
+>>>>>>> d743227d882f5768e1fc1215b84d1a90b35ffc48
 			}
 		}
 	}

@@ -1,6 +1,6 @@
-#include "../../include/ChannelManager.hpp"
+#include "../../include/ChannelHandler.hpp"
 
-channelIter ChannelManager::getChannelIterator(std::string channelName) const
+channelIter ChannelHandler::getChannelIterator(const std::string& channelName) const
 {
 	for(channelIter it = _channels.begin(); it != _channels.end(); it++)
 		if (it->getName() == channelName)
@@ -8,26 +8,26 @@ channelIter ChannelManager::getChannelIterator(std::string channelName) const
 	return _channels.end();
 }
 
-bool ChannelManager::isChannelExist(std::string channelName) const
+bool ChannelHandler::isChannelExist(const std::string& channelName) const
 {
 	return getChannelIterator(channelName) != _channels.end();
 }
 
-Channel& ChannelManager::getChannel(std::string channelName) const
+Channel& ChannelHandler::getChannel(const std::string& channelName) const
 {
 	channelIter ch = getChannelIterator(channelName);
 	if (ch == _channels.end())
-		throw std::logic_error("must not use ChanndlManager::find_must_exist(channelName) when not exist");
+		throw std::logic_error("must not use ChanndlHandler::find_must_exist(channelName) when not exist");
 	return const_cast<Channel&>(*ch);
 }
 
-std::set<Channel> ChannelManager::getChannels() const 
+std::set<Channel> ChannelHandler::getChannels() const 
 {
 	return _channels;
 }
 
 //addClient에 해당하는 채널매니저의 동작: add participant
-void ChannelManager::addClient(const Command& cmd, Client &client, const std::vector<std::string> &channelList, const std::vector<std::string> &ch_pass)
+void ChannelHandler::addClient(const Command& cmd, Client &client, const std::vector<std::string> &channelList, const std::vector<std::string> &ch_pass)
 {
 	for(size_t i = 0; i < channelList.size(); i++)
 	{
@@ -41,7 +41,7 @@ void ChannelManager::addClient(const Command& cmd, Client &client, const std::ve
 	}
 }
 
-void ChannelManager::removeTerminatedClient(Client &client)
+void ChannelHandler::removeTerminatedClient(Client &client)
 {
 	for(channelIter channelIter = _channels.begin(); channelIter != _channels.end(); channelIter++)
 	{
@@ -56,20 +56,20 @@ void ChannelManager::removeTerminatedClient(Client &client)
 	}
 }
 
-void ChannelManager::removeDepartedClient(const Command& cmd, Client &sender, std::vector<std::string> &channelList)
+void ChannelHandler::removeDepartedClient(const Command& cmd, Client &sender, std::vector<std::string> &channelList)
 {
 	for(size_t i = 0; i < channelList.size(); i++)
 	{
 		if (requireExistChannel(sender, channelList[i]))//존재하는 채널이면
 		{
 			getChannel(channelList[i]).broadcast(sender, REPLY(sender.getUserString(), cmd._commandName, channelList[i], ""));//해당 채널에서 PART 메시지를 보내야 한다
-			getChannel(channelList[i]).removeMember(sender);//떠난다
+			getChannel(channelList[i]).removeMemberCheckOperator(sender, channelList[i]);//떠난다
 
 		}
 	}
 }
 
-bool ChannelManager::requireValidChannelName(Client &client, const std::string & channel_name)
+bool ChannelHandler::requireValidChannelName(Client &client, const std::string & channel_name)
 {
 	if ((channel_name == "" || channel_name[0] != '#' || channel_name == "#"))
 	{
@@ -79,7 +79,7 @@ bool ChannelManager::requireValidChannelName(Client &client, const std::string &
 	return true;
 }
 
-bool ChannelManager::requireExistChannel(Client &client, const std::string & channel_name)
+bool ChannelHandler::requireExistChannel(Client &client, const std::string & channel_name)
 {
 	if (!isChannelExist(channel_name))
 	{
@@ -89,7 +89,7 @@ bool ChannelManager::requireExistChannel(Client &client, const std::string & cha
 	return true;
 }
 
-void ChannelManager::broadcastToChannel(const Command &cmd, Client &sender, const std::string &channel_name)
+void ChannelHandler::broadcastToChannel(const Command &cmd, Client &sender, const std::string &channel_name)
 {
 	if (!requireExistChannel(sender, channel_name))
 		return;
@@ -97,7 +97,7 @@ void ChannelManager::broadcastToChannel(const Command &cmd, Client &sender, cons
 }
 
 // NICK, QUIT에서 사용된다
-void ChannelManager::replyToAllPeerClients(Client &sender, const Command &cmd)// 같은 채널에 속한 사람들에게 다 알려주기 (나 빼고)
+void ChannelHandler::replyToAllPeerClients(Client &sender, const Command &cmd)// 같은 채널에 속한 사람들에게 다 알려주기 (나 빼고)
 {
 	std::vector<int> peerClients;//같은 클라이언트에게 여러 번 보내지 않도록 한 번 보내면 여기에 저장
 

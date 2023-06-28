@@ -1,6 +1,6 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 
-void CmdManager::user(Client &client, const Command &cmd)
+void CmdHandler::user(Client &client, const Command &cmd)
 {
 	if (!requireAuthed(client)) return;
 	if (client.isUserSetted())

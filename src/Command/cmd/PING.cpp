@@ -1,4 +1,4 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 
 static void pong(Client &sender, const Command &cmd)
 {
@@ -7,7 +7,7 @@ static void pong(Client &sender, const Command &cmd)
 	sender.appendToSendBuffer(PONG_MSG(msg));
 }
 
-void CmdManager::ping(Client &sender, const Command& cmd)
+void CmdHandler::ping(Client &sender, const Command& cmd)
 {
 	if (!requireRegistrationDone(sender)) return;
 	if (!requireEnoughParams(sender, cmd, 1, 2)) return;

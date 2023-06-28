@@ -51,36 +51,38 @@ public:
     //기본 getter
     std::string getName() const;
     const std::set<Client>& getMembers() const;
+	std::set<Client>& getOperators();
 
     //변형된 결과 getter
     std::string getModeString();
-    std::string getMembershipString(const Client&client) const;
+    std::string getMembershipString(const Client& client) const;
     bool isMember(const Client& target) const;
     
     //내용 변경
     void removeMember(Client& target);
-    void addMember(const Command&cmd, Client& sender, const std::string & pass = "");
-    void ejectMember(const Command&cmd, Client &sender, Client& target);
-    void setTopic(const Command&cmd, Client &sender, const std::string &topic);
-    void addInvitedList(const Command&cmd, Client &sender, Client& target);
+	void removeMemberCheckOperator(Client& target, const std::string& channelList);
+    void addMember(const Command& cmd, Client& sender, const std::string& pass = "");
+    void ejectMember(const Command& cmd, Client& sender, Client& target);
+    void setTopic(const Command& cmd, Client& sender, const std::string& topic);
+    void addInvitedList(const Command& cmd, Client& sender, Client& target);
 
     //클라이언트에게 행동
     void broadcast(Client& sender, std::string message);
     void broadcastExceptSender(Client& sender, std::string message);
     void replyNamesCommend(Client& sender) const;
-    void showTopic(Client &sender);
+    void showTopic(Client& sender);
     
-    void modeInviteState(Client &client);
-    void modeInvite(const Command&cmd, Client &sender, bool valid);
-    void modeOperator(const Command&cmd, Client &sender, bool valid, Client &target);
-    void modeTopicState(Client &sender);
-    void modeTopic(const Command&cmd, Client &sender, bool valid);
-    void modeKey(Client &sender);
-    void modeKeyAdd(const Command&cmd, Client &sender, const std::string &new_pass);
-    void modeKeyRemove(const Command&cmd, Client &sender);
-    void modeLimitState(Client &sender);
-    void modeLimitAdd(const Command&cmd, Client &sender, const std::string &new_pass);
-    void modeLimitRemove(const Command&cmd, Client &sender);
+    void modeInviteState(Client& client);
+    void modeInvite(const Command& cmd, Client& sender, bool valid);
+    void modeOperator(const Command& cmd, Client& sender, bool valid, Client& target);
+    void modeTopicState(Client& sender);
+    void modeTopic(const Command& cmd, Client& sender, bool valid);
+    void modeKey(Client& sender);
+    void modeKeyAdd(const Command& cmd, Client& sender, const std::string& new_pass);
+    void modeKeyRemove(const Command& cmd, Client& sender);
+    void modeLimitState(Client& sender);
+    void modeLimitAdd(const Command& cmd, Client& sender, const std::string& new_pass);
+    void modeLimitRemove(const Command& cmd, Client& sender);
 
     // 삭제??
     bool operator<(const Channel& rhs) const;

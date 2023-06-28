@@ -1,4 +1,4 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 
 static std::vector<std::string> parseChannelNames(const Command& cmd)
 {
@@ -6,10 +6,17 @@ static std::vector<std::string> parseChannelNames(const Command& cmd)
 }
 
 //PART #a
-void CmdManager::part(Client& sender, const Command& cmd)
+void CmdHandler::part(Client& sender, const Command& cmd)
 {
+<<<<<<< HEAD
 	if (!requireRegistrationDone(sender)) return;
 	if (!requireEnoughParams(sender, cmd, 1, 2))	return;
+=======
+	if (!requireAuthed(sender)) return;
+	if (!requireNickUser(sender)) return;
+	if (!requireEnoughParams(sender, cmd, 1, 2)) return;
+
+>>>>>>> d743227d882f5768e1fc1215b84d1a90b35ffc48
 	std::vector<std::string> ch_names = parseChannelNames(cmd);
-	channelManager.removeDepartedClient(cmd, sender, ch_names);
+	channelHandler.removeDepartedClient(cmd, sender, ch_names);
 }

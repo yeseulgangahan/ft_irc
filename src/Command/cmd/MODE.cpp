@@ -1,7 +1,7 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 #include "../../../include/Mode.hpp"
 
-void CmdManager::modeInvite(Channel &channel, Client &sender, const Command &cmd)
+void CmdHandler::modeInvite(Channel &channel, Client &sender, const Command &cmd)
 {
 	std::string flag = getFlag(cmd);
 	if (flag == MODE_I)
@@ -14,15 +14,15 @@ void CmdManager::modeInvite(Channel &channel, Client &sender, const Command &cmd
 		throw std::logic_error("");
 }
 //MODE #ch1 +o user
-void CmdManager::modeOperator(Channel &channel, Client &sender, const Command &cmd)
+void CmdHandler::modeOperator(Channel &channel, Client &sender, const Command &cmd)
 {
 	if (!requireEnoughParams(sender, cmd, 3, 6))
 		return;
 	std::string flag = getFlag(cmd);
 	std::string targetNick = cmd._parameters[2];
-	if (!clientManager.requireExistNick(sender, targetNick))
+	if (!clientHandler.requireExistNick(sender, targetNick))
 		return;
-	Client &target = clientManager.getClient(targetNick);
+	Client &target = clientHandler.getClient(targetNick);
 	if (flag == MODE_O_ADD)
 		channel.modeOperator(cmd, sender, true, target);
 	else if (flag == MODE_O_REM)
@@ -31,7 +31,7 @@ void CmdManager::modeOperator(Channel &channel, Client &sender, const Command &c
 		throw std::logic_error("");
 }
 
-void CmdManager::modeTopic(Channel &channel, Client &sender, const Command &cmd)
+void CmdHandler::modeTopic(Channel &channel, Client &sender, const Command &cmd)
 {
 	if (!requireEnoughParams(sender, cmd, 2, 6))
 		return;
@@ -46,28 +46,8 @@ void CmdManager::modeTopic(Channel &channel, Client &sender, const Command &cmd)
 		throw std::logic_error("");
 }
 
-void CmdManager::modeKey(Channel &channel, Client &sender, const Command &cmd)
-{
-	if (!requireEnoughParams(sender, cmd, 2, 6))
-		return;
-	std::string flag = getFlag(cmd);
-	if (flag == MODE_K)
-		channel.modeKey(sender);
-	else if (flag == MODE_K_ADD)
-	{
-		if (!requireEnoughParams(sender, cmd, 3, 6))
-			return;
-		channel.modeKeyAdd(cmd, sender, cmd._parameters[2]);
-	}
-	else if (flag == MODE_K_REM)
-	{
-		channel.modeKeyRemove(cmd, sender);
-	}
-	else
-		throw std::logic_error("");
-}
 
-void CmdManager::modeLimit(Channel &channel, Client &sender, const Command &cmd)
+void CmdHandler::modeLimit(Channel &channel, Client &sender, const Command &cmd)
 {
 	if (!requireEnoughParams(sender, cmd, 2, 6))
 		return;
@@ -88,12 +68,12 @@ void CmdManager::modeLimit(Channel &channel, Client &sender, const Command &cmd)
 		throw std::logic_error("");
 }
 
-void CmdManager::modeState(Channel &channel, Client &sender)
+void CmdHandler::modeState(Channel &channel, Client &sender)
 {
 	sender.appendToSendBuffer(RPL_CHANNELMODEIS(sender, channel, channel.getModeString(), ""));
 }
 
-void CmdManager::mode(Client &sender, const Command &cmd)
+void CmdHandler::mode(Client &sender, const Command &cmd)
 {
 	if (!requireAuthed(sender))
 		return;
@@ -104,10 +84,10 @@ void CmdManager::mode(Client &sender, const Command &cmd)
 	if (cmd._parameters[0] == "" || cmd._parameters[0][0] != '#' || cmd._parameters[0] == "#")
 		return; 
 	
-	if (!channelManager.requireExistChannel(sender, cmd._parameters[0]))
+	if (!channelHandler.requireExistChannel(sender, cmd._parameters[0]))
 		return;
 
-	Channel &channel = channelManager.getChannel(cmd._parameters[0]);
+	Channel &channel = channelHandler.getChannel(cmd._parameters[0]);
 
 	if (cmd._parameters.size() == 1)
 		modeState(channel, sender);

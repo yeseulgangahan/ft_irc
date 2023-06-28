@@ -65,6 +65,7 @@ void Channel::modeKeyAdd(const Command &cmd, Client &sender, const std::string &
     if (!requireOperator(sender))
         return;
     _password = new_pass;
+    _modeKey = true;
     broadcast(sender,  REP_CMD(sender, cmd));
 }
 
@@ -73,6 +74,7 @@ void Channel::modeKeyRemove(const Command &cmd, Client &sender)
     if (!requireOperator(sender))
         return;
     _password = "";
+    _modeKey = false;
     broadcast(sender,  REP_CMD(sender, cmd));
 }
 
@@ -99,7 +101,7 @@ static bool checkDigit(std::string string)
 	return (true);
 }
 
-void Channel::modeLimitAdd(const Command &cmd, Client &sender, const std::string &string)
+void Channel::modeLimitAdd(const Command& cmd, Client& sender, const std::string& string)
 {
     if (!requireOperator(sender))
         return;
@@ -113,7 +115,7 @@ void Channel::modeLimitAdd(const Command &cmd, Client &sender, const std::string
     broadcast(sender, REP_CMD(sender, cmd));
 }
 
-void Channel::modeLimitRemove(const Command &cmd, Client &sender)
+void Channel::modeLimitRemove(const Command& cmd, Client& sender)
 {
     if (!requireOperator(sender))
         return;

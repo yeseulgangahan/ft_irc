@@ -1,4 +1,4 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 #include "../../../include/Message.hpp"
 
 static void capLS(Client &sender)
@@ -26,9 +26,9 @@ static void capEND(Client &sender)
 	}
 }
 
-void CmdManager::cap(Client &sender, const Command &cmd)
+void CmdHandler::cap(Client &sender, const Command &cmd)
 {
-	if (!requireEnoughParams(sender, cmd, 1, 3))	return;
+	if (!requireEnoughParams(sender, cmd, 1, 3)) return;
 	
 	std::string sub_cmd = cmd._parameters[0];
 	if (sub_cmd == "LS")

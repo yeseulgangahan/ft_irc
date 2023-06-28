@@ -71,6 +71,11 @@ const std::set<Client>& Channel::getMembers() const
     return _members;
 }
 
+std::set<Client>& Channel::getOperators()
+{
+    return _operators;
+}
+
 std::string Channel::getModeString()
 {
     std::string mode = "+";
@@ -115,7 +120,7 @@ std::string Channel::getModeString()
     return mode;
 }
 
-std::string Channel::getMembershipString(const Client&client) const
+std::string Channel::getMembershipString(const Client& client) const
 {
     if (!isMember(client))
         throw std::runtime_error("getMembershipString must member");
@@ -137,8 +142,25 @@ void Channel::removeMember(Client& target)
         _operators.erase(target);
 }
 
+void Channel::removeMemberCheckOperator(Client &target, const std::string &channelList)
+{
+    if (!requireSenderOnChannel(target))
+        return;
+    
+    _members.erase(target);
+    if (isOperator(target))
+    {
+        _operators.erase(target);
+        if (_operators.size() < 1 && _members.size() > 0 && !isOperator(*_members.begin()))
+        {
+            _operators.insert(*_members.begin());
+			Client &tmp = const_cast<Client &>(*getOperators().begin());
+			broadcast(tmp, REPLY(_operators.begin()->getUserString(), "MODE" + " channelList" + " +o " + _operators.begin()->getNick(), channelList, ""));
+        }
+    }
+}
 
-void Channel::addMember(const Command& cmd, Client& sender, const std::string & pass)
+void Channel::addMember(const Command& cmd, Client& sender, const std::string& pass)
 {
     if (isMember(sender)) return ;
     if (_modeInvite && (_invited.find(sender) == _invited.end()))
@@ -164,7 +186,9 @@ void Channel::addMember(const Command& cmd, Client& sender, const std::string & 
 
 void Channel::setTopic(const Command& cmd, Client &sender, const std::string &topic)
 {
-    if (_modeTopic && !requireOperator(sender)) return;
+    if (_modeTopic && !requireOperator(sender))
+        return;
+
     _topic = topic;
     sender.appendToSendBuffer(getTopicReplyString(sender));
     broadcastExceptSender(sender,  REP_CMD(sender, cmd));
@@ -222,6 +246,7 @@ void Channel::showTopic(Client &sender)
 
 void Channel::addInvitedList(const Command &cmd, Client &sender, Client& target)
 {
+    if (!requireSenderOnChannel(sender)) return;
 	if (!requireOperator(sender)) return;
 	if (isMember(target))
 	{

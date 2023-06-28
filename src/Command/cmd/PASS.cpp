@@ -1,4 +1,4 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 
 
 static bool hasOnePasswordParameter(Client &client, const Command& cmd)
@@ -32,7 +32,7 @@ static bool isInputPasswordCorrect(Client &client, const std::string & inputPass
 	return (true);
 }
 
-void CmdManager::pass(Client &client, const Command& cmd)
+void CmdHandler::pass(Client &client, const Command& cmd)
 {
 	if (!isNewClient(client)) return;//이미 인증됐으면 안됨
 	if (!hasOnePasswordParameter(client, cmd)) return;

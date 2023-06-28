@@ -1,18 +1,18 @@
-#include "../../include/ClientManager.hpp"
+#include "../../include/ClientHandler.hpp"
 #include "../../include/Message.hpp"
 
-void ClientManager::addClient(int socketFd)
+void ClientHandler::addClient(int socketFd)
 {
 	Client newClient(socketFd);
 	_clientMap[socketFd] = newClient;
 }
 
-Client &ClientManager::getClient(int fd)
+Client &ClientHandler::getClient(int fd)
 {
 	return _clientMap[fd];
 }
 
-std::map<int, Client>::iterator ClientManager::findClientByNick(const std::string &nick)
+std::map<int, Client>::iterator ClientHandler::findClientByNick(const std::string &nick)
 {
 	for (std::map<int, Client>::iterator it = _clientMap.begin(); it != _clientMap.end(); it++)
 		if (it->second.getNick() == nick)
@@ -20,18 +20,18 @@ std::map<int, Client>::iterator ClientManager::findClientByNick(const std::strin
 	return _clientMap.end();
 }
 
-bool ClientManager::isClientExistByNick(const std::string &nickname)
+bool ClientHandler::isClientExistByNick(const std::string &nickname)
 {
 	return findClientByNick(nickname) != _clientMap.end();
 }
 
-Client &ClientManager::getClient(const std::string &nickname)
+Client &ClientHandler::getClient(const std::string &nickname)
 {
 	assert(isClientExistByNick(nickname));
 	return const_cast<Client &>(findClientByNick(nickname)->second);
 }
 
-const std::vector<Client> ClientManager::getConnectClients()
+const std::vector<Client> ClientHandler::getConnectClients()
 {
 	std::vector<Client> connect_clients;
 	for (std::map<int, Client>::iterator it = _clientMap.begin(); it != _clientMap.end(); it++)
@@ -39,7 +39,7 @@ const std::vector<Client> ClientManager::getConnectClients()
 	return connect_clients;
 }
 
-bool ClientManager::requireExistNick(Client &sender, const std::string &targetNick)
+bool ClientHandler::requireExistNick(Client &sender, const std::string &targetNick)
 {
 	if (!isClientExistByNick(targetNick))
 	{
@@ -49,10 +49,10 @@ bool ClientManager::requireExistNick(Client &sender, const std::string &targetNi
 	return true;
 }
 
-void ClientManager::deleteClient(Client &client, ChannelManager &channelManager)
+void ClientHandler::deleteClient(Client &client, ChannelHandler &channelHandler)
 {
 	std::cout << YELLOW << "Client " << client.getNick() << " disconnected" << RESET << std::endl;
-	channelManager.removeTerminatedClient(client);
+	channelHandler.removeTerminatedClient(client);
 	assert(isClientExistByNick(client.getNick()));
 	_clientMap.erase(findClientByNick(client.getNick()));
 	client.quit();
@@ -60,14 +60,14 @@ void ClientManager::deleteClient(Client &client, ChannelManager &channelManager)
 	std::cout << YELLOW << "Total Clients: " << _clientMap.size() << RESET << std::endl;
 }
 
-void ClientManager::privmsg(const Command &cmd, Client &sender, const std::string &receiverName)
+void ClientHandler::privmsg(const Command &cmd, Client &sender, const std::string &receiverName)
 {
 	if (!requireExistNick(sender, receiverName))
 		return;
 	getClient(receiverName).appendToSendBuffer(REP_CMD(sender, cmd));
 }
 
-void ClientManager::notice(const Command &cmd, Client &sender, const std::string &receiverName)
+void ClientHandler::notice(const Command &cmd, Client &sender, const std::string &receiverName)
 {
 	if (!isClientExistByNick(receiverName))
 		return;
