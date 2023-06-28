@@ -13,7 +13,7 @@ std::vector<Command> CmdHandler::parseCommands(const std::string &commands_msg)
     return cmds;
 }
 
-void CmdHandler::executeCommand(Client &sender, const Command &cmd)
+void CmdHandler::executeCommand(Client &sender, Command cmd)
 {
 	//cmd.debug();
 	switch (cmd._commandName[0])
