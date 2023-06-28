@@ -47,9 +47,9 @@ class Server
 		void	closeAllFd(void);
 		void	createServerSocket(void);
 		void	addClient(int socketfd);
-		void	receiveCommand(Client &client, const size_t &i);
+		bool	receiveCommand(Client &client, const size_t &i);
 		void	PollLoop(void);
-		void	connectNewClient(size_t pollSize);
+		bool	connectNewClient(size_t pollSize);
 };
 
 #endif
