@@ -61,11 +61,11 @@ bool Channel::requireSenderOnChannel(Client& sender) const
     return true;
 }
 
-bool Channel::requirePassParameter(Client &sender, const std::string &new_pass) const
+bool Channel::requireModeParameter(Client &sender, const std::string &str, const std::string &modeName, const std::string &c) const
 {
-	if (new_pass.empty())
+	if (str.empty())
 	{
-		sender.appendToSendBuffer(ERR_INVALIDMODEPARAM((*this)));
+		sender.appendToSendBuffer(ERR_INVALIDMODEPARAM((*this), modeName, c));
 		return false;
 	}
 	return true;

@@ -43,7 +43,7 @@ private:
     bool requireOperator(Client& sender) const;
     bool requireSenderOnChannel(Client& sender) const;
     bool requireTargetInChannel(Client& sender, Client &target) const;
-	bool requirePassParameter(Client &sender, const std::string &new_pass) const;
+	bool requireModeParameter(Client &sender, const std::string &param, const std::string &modeName, const std::string &c) const;
     
 public:
     //생성자

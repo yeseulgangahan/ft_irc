@@ -62,7 +62,7 @@ void Channel::modeKey(Client &sender)
 
 void Channel::modeKeyAdd(const Command &cmd, Client &sender, const std::string &new_pass)
 {
-	if (!requirePassParameter(sender, new_pass))
+	if (!requireModeParameter(sender, new_pass, "key", "k"))
 		return;
     if (!requireOperator(sender))
         return;
@@ -105,6 +105,8 @@ static bool checkDigit(std::string string)
 
 void Channel::modeLimitAdd(const Command& cmd, Client& sender, const std::string& string)
 {
+	if (!requireModeParameter(sender, string, "limit", "l"))
+		return;
     if (!requireOperator(sender))
         return;
     if (!checkDigit(string))

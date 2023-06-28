@@ -78,7 +78,7 @@ const std::string serverName = "ft_IRC";
 #define RPL_CHANNELMODEIS(sender, ch, mode, targetNick) RPL_NICK_MSG(sender, "324", ch.getName() + ((std::string)mode == "" ? "" : " " + (std::string)mode) + ((std::string)targetNick == "" ? "" : " " + (std::string)targetNick), "")
 #define ERR_NOCHANMODES(sender, mode) RPL_NICK_MSG(sender, "472", mode, "is an unknown mode character to me")
 #define ERR_CHANOPRIVSNEEDED(ch) REPLY(":" + serverName, "482", ch.getName(), "You're not a channel operator")
-#define ERR_INVALIDMODEPARAM(ch) REPLY(":" + serverName, "696", ch.getName() + " k *", "You must specify a parameter for the key mode. Syntax: <key>.")
+#define ERR_INVALIDMODEPARAM(ch, mode, c) REPLY(":" + serverName, "696", ch.getName() + " " + c + " *", "You must specify a parameter for the " + mode + " mode. Syntax: <" + mode + ">.")
 
 // PRIVMSG
 #define ERR_NORECIPIENT(sender, command) RPL_NICK_MSG(sender, "411", "", "No recipient given (" + command + ")")
