@@ -90,11 +90,7 @@ void Server::addNewPoll(int socketFd)
 
 void Server::PollLoop(void)
 {
-<<<<<<< HEAD
-	int flag = 1;
-=======
 	int flag = true;
->>>>>>> d743227d882f5768e1fc1215b84d1a90b35ffc48
 
 	while (1)
 	{
@@ -114,21 +110,12 @@ void Server::PollLoop(void)
 			else
 			{
 				if (_pollFds[i].revents & POLLIN)
-<<<<<<< HEAD
-					flag = (_pollFds[i].fd == _serverSocket) ? connectNewClient(_pollFds.size()) : receiveCommand(_clientHandler.getClient(_pollFds[i].fd), i);
-
-				if (_pollFds[i].revents & POLLOUT && flag)
-					_clientHandler.getClient(_pollFds[i].fd).sendMessages();
-				else if (!flag)
-					flag = 1;
-=======
 					flag = (_pollFds[i].fd == _serverSocket) ? connectNewClient(_pollFds.size()) : receiveCommand(_clientHandler.getClient(_pollFds[i].fd), i);
 
 				if (_pollFds[i].revents & POLLOUT && flag)
 					_clientHandler.getClient(_pollFds[i].fd).sendMessages();
 				else if (!flag)
 					flag = true;
->>>>>>> d743227d882f5768e1fc1215b84d1a90b35ffc48
 			}
 		}
 	}

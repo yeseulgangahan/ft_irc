@@ -78,6 +78,16 @@ void CmdHandler::executeCommand(Client &sender, const Command &cmd)
 	}
 }
 
+bool CmdHandler::requireAuthed(Client &client)
+{
+	if (!client.isAuthed())
+	{
+		client.appendToSendBuffer(RPL_NONE("You have not authenticated"));
+		return false;
+	}
+	return true;
+}
+
 // requireAuthed + requireNickUser
 bool CmdHandler::requireRegistrationDone(Client &client)
 {
