@@ -20,7 +20,7 @@
 
 //COMMAND [PARAMETER1] [PARAMETER2] ... [:TRAILING]
 
-class CmdManager;
+class CmdHandler;
 class Command
 {
 	private:

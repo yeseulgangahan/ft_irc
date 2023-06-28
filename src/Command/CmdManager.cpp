@@ -1,9 +1,9 @@
-#include "../../include/CmdManager.hpp"
+#include "../../include/CmdHandler.hpp"
 
-CmdManager::CmdManager(ClientManager &clientManager, ChannelManager &channelManager, const std::string &serverPassword)
-: clientManager(clientManager), channelManager(channelManager), _serverPassword(serverPassword) { }
+CmdHandler::CmdHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler, const std::string &serverPassword)
+: clientHandler(clientHandler), channelHandler(channelHandler), _serverPassword(serverPassword) { }
 
-std::vector<Command> CmdManager::parseCommands(const std::string &commands_msg)
+std::vector<Command> CmdHandler::parseCommands(const std::string &commands_msg)
 {
     std::vector<std::string> cmd_lines = splitByLines(commands_msg);
     std::vector<Command> cmds;
@@ -13,7 +13,7 @@ std::vector<Command> CmdManager::parseCommands(const std::string &commands_msg)
     return cmds;
 }
 
-void CmdManager::executeCommand(Client &sender, const Command &cmd)
+void CmdHandler::executeCommand(Client &sender, const Command &cmd)
 {
 	//cmd.debug();
 	switch (cmd._commandName[0])
@@ -79,7 +79,7 @@ void CmdManager::executeCommand(Client &sender, const Command &cmd)
 }
 
 //삭제
-bool CmdManager::requireAuthed(Client &client)
+bool CmdHandler::requireAuthed(Client &client)
 {
 	if (!client.isAuthed())
 	{
@@ -90,7 +90,7 @@ bool CmdManager::requireAuthed(Client &client)
 }
 
 // requireRegistrationDone으로 변경
-bool CmdManager::requireNickUser(Client &client)
+bool CmdHandler::requireNickUser(Client &client)
 {
 	if (!client.isRegistrationDone())
 	{
@@ -100,7 +100,7 @@ bool CmdManager::requireNickUser(Client &client)
 	return true;
 }
 
-bool CmdManager::requireEnoughParams(Client &sender, const Command& cmd, size_t ok_size_min, size_t ng_size_min, bool require_trailing)
+bool CmdHandler::requireEnoughParams(Client &sender, const Command& cmd, size_t ok_size_min, size_t ng_size_min, bool require_trailing)
 {
 	assert(ok_size_min < ng_size_min);
 
@@ -120,7 +120,7 @@ bool CmdManager::requireEnoughParams(Client &sender, const Command& cmd, size_t 
 }
 
 
-void CmdManager::plusOption(Channel &channel, Client &sender, const Command &cmd)
+void CmdHandler::plusOption(Channel &channel, Client &sender, const Command &cmd)
 {
 	int no_arg = 0;
 	for (size_t i = 1; i < cmd._parameters[1].size(); i ++)
@@ -134,19 +134,19 @@ void CmdManager::plusOption(Channel &channel, Client &sender, const Command &cmd
 						if (!requireEnoughParams(sender, cmd, 3, 6))
 							return;
 
-						if (no_arg && !clientManager.requireExistNick(sender, \
+						if (no_arg && !clientHandler.requireExistNick(sender, \
 							cmd._parameters[1 + i - no_arg]))
 							return;
-						else if (!clientManager.requireExistNick(sender, \
+						else if (!clientHandler.requireExistNick(sender, \
 								cmd._parameters[1 + i]))
 							return;
 							
 						if (no_arg)
 							channel.modeOperator(cmd, sender, true, \
-							clientManager.getClient(cmd._parameters[1 + i - no_arg]));
+							clientHandler.getClient(cmd._parameters[1 + i - no_arg]));
 						else
 							channel.modeOperator(cmd, sender, true, \
-							clientManager.getClient(cmd._parameters[1 + i]));
+							clientHandler.getClient(cmd._parameters[1 + i]));
 																		break;
 			case 't':
 						no_arg++;
@@ -181,7 +181,7 @@ void CmdManager::plusOption(Channel &channel, Client &sender, const Command &cmd
 	}	
 }
 
-void CmdManager::minusOption(Channel &channel, Client &sender, const Command &cmd)
+void CmdHandler::minusOption(Channel &channel, Client &sender, const Command &cmd)
 {
 	for (size_t i = 1; i < cmd._parameters[1].size(); i ++)
 	{
@@ -191,10 +191,10 @@ void CmdManager::minusOption(Channel &channel, Client &sender, const Command &cm
 			case 'o':	
 						if (!requireEnoughParams(sender, cmd, 3, 6))
 							return;
-						if (!clientManager.requireExistNick(sender, cmd._parameters[2]))
+						if (!clientHandler.requireExistNick(sender, cmd._parameters[2]))
 							return;
 						channel.modeOperator(cmd, sender, false, \
-						clientManager.getClient(cmd._parameters[2]));
+						clientHandler.getClient(cmd._parameters[2]));
 																		break;
 			case 't':
 						if (!requireEnoughParams(sender, cmd, 2, 6))

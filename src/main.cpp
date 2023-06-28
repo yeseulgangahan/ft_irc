@@ -2,8 +2,8 @@
 #include <signal.h>
 #include "../include/Client.hpp"
 #include "../include/Channel.hpp"
-#include "../include/ChannelManager.hpp"
-#include "../include/CmdManager.hpp"
+#include "../include/ChannelHandler.hpp"
+#include "../include/CmdHandler.hpp"
 #include <cstdlib>
 
 Server *server;

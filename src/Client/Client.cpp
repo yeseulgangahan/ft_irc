@@ -1,5 +1,5 @@
 #include "../../include/Client.hpp"
-#include "../../include/CmdManager.hpp"
+#include "../../include/CmdHandler.hpp"
 
 Client::Client() {}
 

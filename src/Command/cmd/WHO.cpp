@@ -1,4 +1,4 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 
 static const std::string &channel_name(const Command &cmd)
 {
@@ -15,12 +15,12 @@ static void send_who_reply(Client &sender, Channel &channel)
 	sender.appendToSendBuffer(RPL_ENDOFWHO(sender, channel));
 }
 
-void CmdManager::who(Client &sender, const Command &cmd)
+void CmdHandler::who(Client &sender, const Command &cmd)
 {
 	if (!requireAuthed(sender)) return;
 	if (!requireNickUser(sender)) return;
 	if (!requireEnoughParams(sender, cmd, 1, 2)) return;
-	if (!channelManager.requireExistChannel(sender, channel_name(cmd))) return;
+	if (!channelHandler.requireExistChannel(sender, channel_name(cmd))) return;
 
-	send_who_reply(sender, channelManager.getChannel(channel_name(cmd)));
+	send_who_reply(sender, channelHandler.getChannel(channel_name(cmd)));
 }

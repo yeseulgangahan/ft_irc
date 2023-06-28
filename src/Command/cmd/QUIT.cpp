@@ -1,11 +1,11 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 
-void CmdManager::sendQuitMessage(Client&sender, const Command &cmd)
+void CmdHandler::sendQuitMessage(Client&sender, const Command &cmd)
 {
-	channelManager.cmdReplyToSameChannel(sender, cmd);
+	channelHandler.cmdReplyToSameChannel(sender, cmd);
 }
 
-void CmdManager::quit(Client&client, const Command &cmd)
+void CmdHandler::quit(Client&client, const Command &cmd)
 {
 	if (!requireAuthed(client)) return;
 	if (!requireNickUser(client)) return;

@@ -1,4 +1,4 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 
 static bool requireValidNick(Client &client, const std::string & newNick)
 {
@@ -15,7 +15,7 @@ static bool requireValidNick(Client &client, const std::string & newNick)
 	return true;
 }
 
-void CmdManager::nick(Client &client, const Command& cmd)
+void CmdHandler::nick(Client &client, const Command& cmd)
 {
 	if (!requireAuthed(client)) return;
 	if (!requireEnoughParams(client, cmd, 1, 2)) return;
@@ -23,7 +23,7 @@ void CmdManager::nick(Client &client, const Command& cmd)
 	std::string newNick = cmd._parameters[0];
 	if (!requireValidNick(client, newNick)) return;
 
-	channelManager.cmdReplyToSameChannel(client, cmd);//내가 속한 채널마다 보내준다
+	channelHandler.cmdReplyToSameChannel(client, cmd);//내가 속한 채널마다 보내준다
 	client.appendToSendBuffer(REP_CMD(client, cmd));//나한테도 보내준다
 	client.setNick(newNick);
 }

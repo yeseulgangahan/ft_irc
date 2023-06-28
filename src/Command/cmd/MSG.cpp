@@ -1,7 +1,7 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 
 enum e_reply_require{recv_reply, not_recv_reply};
-static bool require_valid_param(Client &client, const Command &cmd, CmdManager &cmdManager, e_reply_require reply_require)
+static bool require_valid_param(Client &client, const Command &cmd, CmdHandler &cmdHandler, e_reply_require reply_require)
 {
 	bool is_ok = true;
 	if (cmd._parameters.size() == 0)
@@ -10,7 +10,7 @@ static bool require_valid_param(Client &client, const Command &cmd, CmdManager &
 			client.appendToSendBuffer(ERR_NORECIPIENT(client, cmd.getWholeString()));
 		is_ok = false;
 	}
-	else if (!cmdManager.requireEnoughParams(client, cmd, 1, 2))
+	else if (!cmdHandler.requireEnoughParams(client, cmd, 1, 2))
 	{
 		is_ok = false;
 	}
@@ -33,7 +33,7 @@ static bool is_channel(const std::string &reicieve)
 	return reicieve != "" && reicieve[0] == '#';
 }
 
-void CmdManager::privmsg(Client& client, const Command &cmd)
+void CmdHandler::privmsg(Client& client, const Command &cmd)
 {
 	if (!requireAuthed(client)) return;
 	if (!requireNickUser(client)) return;
@@ -43,13 +43,13 @@ void CmdManager::privmsg(Client& client, const Command &cmd)
 	for (size_t i = 0; i < targets.size(); i++)
 	{
 		if (is_channel(targets[i]))
-			channelManager.broadcastToChannel(cmd, client, targets[i]);
+			channelHandler.broadcastToChannel(cmd, client, targets[i]);
 		else
-			clientManager.privmsg(cmd, client, targets[i]);
+			clientHandler.privmsg(cmd, client, targets[i]);
 	}
 }
 
-void CmdManager::notice(Client &sender, const Command& cmd)
+void CmdHandler::notice(Client &sender, const Command& cmd)
 {
 	if (!sender.isAuthed()) return;
 	if (!sender.isUserSetted() || !sender.isNicknameSetted()) return;
@@ -60,8 +60,8 @@ void CmdManager::notice(Client &sender, const Command& cmd)
 	for (size_t i = 0; i < targets.size(); i++)
 	{
 		if (is_channel(targets[i]))
-			channelManager.broadcastToChannel(cmd, sender, targets[i]);
+			channelHandler.broadcastToChannel(cmd, sender, targets[i]);
 		else
-			clientManager.notice(cmd, sender, targets[i]);
+			clientHandler.notice(cmd, sender, targets[i]);
 	}
 }

@@ -1,4 +1,4 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 
 static bool require_yet_set_user(Client &client)
 {
@@ -10,7 +10,7 @@ static bool require_yet_set_user(Client &client)
 	return true;
 }
 
-void CmdManager::user(Client &client, const Command &cmd)
+void CmdHandler::user(Client &client, const Command &cmd)
 {
 	if (!requireAuthed(client)) return;
 	if (!requireEnoughParams(client, cmd, 3, 4, true)) return;

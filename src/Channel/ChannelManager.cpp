@@ -1,6 +1,6 @@
-#include "../../include/ChannelManager.hpp"
+#include "../../include/ChannelHandler.hpp"
 
-channelIter ChannelManager::getChannelIterator(const std::string& channelName) const
+channelIter ChannelHandler::getChannelIterator(const std::string& channelName) const
 {
 	for(channelIter it = channels.begin(); it != channels.end(); it++)
 		if (it->getName() == channelName)
@@ -8,26 +8,26 @@ channelIter ChannelManager::getChannelIterator(const std::string& channelName) c
 	return channels.end();
 }
 
-bool ChannelManager::isChannelExist(const std::string& channelName) const
+bool ChannelHandler::isChannelExist(const std::string& channelName) const
 {
 	return getChannelIterator(channelName) != channels.end();
 }
 
-Channel& ChannelManager::getChannel(const std::string& channelName) const
+Channel& ChannelHandler::getChannel(const std::string& channelName) const
 {
 	channelIter ch = getChannelIterator(channelName);
 	if (ch == channels.end())
-		throw std::logic_error("must not use ChanndlManager::find_must_exist(channelName) when not exist");
+		throw std::logic_error("must not use ChanndlHandler::find_must_exist(channelName) when not exist");
 	return const_cast<Channel&>(*ch);
 }
 
-std::set<Channel> ChannelManager::getChannels() const 
+std::set<Channel> ChannelHandler::getChannels() const 
 {
 	return channels;
 }
 
 //addClient에 해당하는 채널매니저의 동작: add participant
-void ChannelManager::addClient(const Command& cmd, Client &client, const std::vector<std::string> &channelList, const std::vector<std::string> &ch_pass)
+void ChannelHandler::addClient(const Command& cmd, Client &client, const std::vector<std::string> &channelList, const std::vector<std::string> &ch_pass)
 {
 	for(size_t i = 0; i < channelList.size(); i++)
 	{
@@ -41,7 +41,7 @@ void ChannelManager::addClient(const Command& cmd, Client &client, const std::ve
 	}
 }
 
-void ChannelManager::removeTerminatedClient(Client &client)
+void ChannelHandler::removeTerminatedClient(Client &client)
 {
 	for(channelIter channelIter = channels.begin(); channelIter != channels.end(); channelIter++)
 	{
@@ -56,7 +56,7 @@ void ChannelManager::removeTerminatedClient(Client &client)
 	}
 }
 
-void ChannelManager::removeDepartedClient(const Command& cmd, Client &sender, std::vector<std::string> &channelList)
+void ChannelHandler::removeDepartedClient(const Command& cmd, Client &sender, std::vector<std::string> &channelList)
 {
 	for(size_t i = 0; i < channelList.size(); i++)
 	{
@@ -69,7 +69,7 @@ void ChannelManager::removeDepartedClient(const Command& cmd, Client &sender, st
 	}
 }
 
-bool ChannelManager::requireValidChannelName(Client &client, const std::string & channel_name)
+bool ChannelHandler::requireValidChannelName(Client &client, const std::string & channel_name)
 {
 	if ((channel_name == "" || channel_name[0] != '#' || channel_name == "#"))
 	{
@@ -79,7 +79,7 @@ bool ChannelManager::requireValidChannelName(Client &client, const std::string &
 	return true;
 }
 
-bool ChannelManager::requireExistChannel(Client &client, const std::string & channel_name)
+bool ChannelHandler::requireExistChannel(Client &client, const std::string & channel_name)
 {
 	if (!isChannelExist(channel_name))
 	{
@@ -89,7 +89,7 @@ bool ChannelManager::requireExistChannel(Client &client, const std::string & cha
 	return true;
 }
 
-void ChannelManager::broadcastToChannel(const Command &cmd, Client &sender, const std::string &channel_name)
+void ChannelHandler::broadcastToChannel(const Command &cmd, Client &sender, const std::string &channel_name)
 {
 	if (!requireExistChannel(sender, channel_name))
 		return;
@@ -100,7 +100,7 @@ void ChannelManager::broadcastToChannel(const Command &cmd, Client &sender, cons
 // ?? 아래 두 함수 합칠 예정
 // NICK, QUIT에서 호출된다 뭔가 이상함..
 
-std::set<Client> ChannelManager::get_same_channel_clients(Client&sender)
+std::set<Client> ChannelHandler::get_same_channel_clients(Client&sender)
 {
 	std::set<Client> clients;
 	std::set<Channel> channels = getChannels();
@@ -113,7 +113,7 @@ std::set<Client> ChannelManager::get_same_channel_clients(Client&sender)
 	return clients;
 }
 
-void ChannelManager::cmdReplyToSameChannel(Client &sender, const Command &cmd)
+void ChannelHandler::cmdReplyToSameChannel(Client &sender, const Command &cmd)
 {
 	const std::set<Client> &receivers = get_same_channel_clients(sender);
 	for (clientIter it = receivers.begin(); it != receivers.end(); ++it)

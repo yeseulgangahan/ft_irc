@@ -1,8 +1,8 @@
 #ifndef CMD_MANAGER_HPP
 # define CMD_MANAGER_HPP
 
-# include "ClientManager.hpp"
-# include "ChannelManager.hpp"
+# include "ClientHandler.hpp"
+# include "ChannelHandler.hpp"
  
 # define CAP  "CAP"
 # define  PASS  "PASS"	
@@ -21,11 +21,11 @@
 # define  WHO  "WHO"	
 # define  NOTICE  "NOTICE"
 
-class CmdManager
+class CmdHandler
 {
 	private:
-		ClientManager &clientManager;
-		ChannelManager &channelManager;
+		ClientHandler &clientHandler;
+		ChannelHandler &channelHandler;
 		std::string _serverPassword;
 		
 		void modeInvite(Channel &channel, Client&sender, const Command &cmd);
@@ -37,7 +37,7 @@ class CmdManager
 		void sendQuitMessage(Client&sender, const Command &cmd);
 	
 	public:
-		CmdManager(ClientManager &clientManager, ChannelManager &channelManager, const std::string &serverPassword);
+		CmdHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler, const std::string &serverPassword);
 		
 		void join(Client &client, const Command &cmd);
 		

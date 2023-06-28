@@ -7,7 +7,7 @@
 typedef std::set<Channel>::iterator channelIter;
 
 
-class ChannelManager
+class ChannelHandler
 {
 	std::set<Channel> channels;
 	

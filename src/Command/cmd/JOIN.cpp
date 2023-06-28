@@ -1,4 +1,4 @@
-#include "../../../include/CmdManager.hpp"
+#include "../../../include/CmdHandler.hpp"
 
 static std::vector<std::string> parseChannelNames(const Command& cmd)
 {
@@ -17,7 +17,7 @@ static std::vector<std::string> parseChannelPasswords(const Command& cmd, const 
 	return (ch_pwds);
 }
 
-void CmdManager::join(Client &client, const Command& cmd)
+void CmdHandler::join(Client &client, const Command& cmd)
 {
 	if (!requireAuthed(client)) return;
 	if (!requireNickUser(client)) return;
@@ -26,5 +26,5 @@ void CmdManager::join(Client &client, const Command& cmd)
 	std::vector<std::string> ChannelNames = parseChannelNames(cmd);
 	std::vector<std::string> ChannelPasswords = parseChannelPasswords(cmd, ChannelNames);
 
-	channelManager.addClient(cmd, client, ChannelNames, ChannelPasswords);
+	channelHandler.addClient(cmd, client, ChannelNames, ChannelPasswords);
 }

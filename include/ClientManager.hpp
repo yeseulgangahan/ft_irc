@@ -11,16 +11,16 @@
 #include <map>
 #include "Client.hpp"
 #include "Command.hpp"
-#include "ChannelManager.hpp"
+#include "ChannelHandler.hpp"
 
 
-class ClientManager
+class ClientHandler
 {
 	std::map<int, Client> _clientMap;
 
 public:
 	void addClient(int socketfd);
-	void deleteClient(Client &client, ChannelManager& channelManager);
+	void deleteClient(Client &client, ChannelHandler& channelHandler);
 
 	std::map<int, Client>::iterator findClientByNick(const std::string & nick);
 	

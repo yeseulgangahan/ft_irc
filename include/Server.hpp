@@ -16,9 +16,9 @@
 # include <map>
 
 # include "Message.hpp"
-# include "ChannelManager.hpp"
-# include "ClientManager.hpp"
-# include "CmdManager.hpp"
+# include "ChannelHandler.hpp"
+# include "ClientHandler.hpp"
+# include "CmdHandler.hpp"
 
 # define TIMEOUT 5000
 # define BUF_LEN 4096
@@ -30,15 +30,15 @@ class Server
 	private:
 		int 						_port;
 		std::string					_password;
-		ChannelManager				_channelManager;
-		ClientManager				_clientManager;
+		ChannelHandler				_channelHandler;
+		ClientHandler				_clientHandler;
 		std::deque<struct pollfd>	_pollFds;
 		int							_serverSocket;
 		
 		void addNewPoll(int socket_fd);
 
 	public:
-		CmdManager		cmdManager;
+		CmdHandler		cmdHandler;
 		
 		Server(int port, std::string &password);
 		~Server();
