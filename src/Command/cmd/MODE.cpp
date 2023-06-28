@@ -97,7 +97,7 @@ void CmdManager::mode(Client &sender, const Command &cmd)
 {
 	if (!requireAuthed(sender))
 		return;
-	if (!requireNickUser(sender))
+	if (!requireRegistrationDone(sender))
 		return;
 	if (!requireEnoughParams(sender, cmd, 1))
 		return;

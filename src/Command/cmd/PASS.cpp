@@ -34,7 +34,7 @@ static bool isInputPasswordCorrect(Client &client, const std::string & inputPass
 
 void CmdManager::pass(Client &client, const Command& cmd)
 {
-	if (!isNewClient(client)) return;
+	if (!isNewClient(client)) return;//이미 인증됐으면 안됨
 	if (!hasOnePasswordParameter(client, cmd)) return;
 	
 	const std::string &password = cmd._parameters[0];

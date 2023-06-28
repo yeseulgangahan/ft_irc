@@ -9,7 +9,7 @@ typedef std::set<Channel>::iterator channelIter;
 
 class ChannelManager
 {
-	std::set<Channel> channels;
+	std::set<Channel> _channels;
 	
 	//getter
 	channelIter getChannelIterator(std::string channelName) const;
@@ -36,7 +36,7 @@ public:
 	bool requireExistChannel(Client &client, const std::string & channel_name);
 
 	// 합칠 예정
-	void cmdReplyToSameChannel(Client &sender, const Command &cmd);
+	void replyToAllPeerClients(Client &sender, const Command &cmd);
 	
 };
 #endif

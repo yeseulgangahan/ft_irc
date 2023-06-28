@@ -19,8 +19,7 @@ static std::vector<std::string> parseChannelPasswords(const Command& cmd, const 
 
 void CmdManager::join(Client &client, const Command& cmd)
 {
-	if (!requireAuthed(client)) return;
-	if (!requireNickUser(client)) return;
+	if (!requireRegistrationDone(client)) return;
 	if (!requireEnoughParams(client, cmd, 1, 3)) return;
 	
 	std::vector<std::string> ChannelNames = parseChannelNames(cmd);

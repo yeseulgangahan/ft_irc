@@ -61,7 +61,7 @@ class CmdManager
 		void notice(Client &client, const Command& cmd);
 
 		bool requireAuthed(Client &client);
-		bool requireNickUser(Client &client);
+		bool requireRegistrationDone(Client &client);
 
 		void plusOption(Channel &channel, Client &sender, const Command &cmd);
 		void minusOption(Channel &channel, Client &sender, const Command &cmd);

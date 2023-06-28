@@ -2,8 +2,7 @@
 
 void CmdManager::topic(Client& sender, const Command& cmd)
 {
-	if (!requireAuthed(sender)) return;
-	if (!requireNickUser(sender)) return;
+	if (!requireRegistrationDone(sender)) return;
 	if (!requireEnoughParams(sender, cmd, 1, 2)) return;
 
 	std::string channel_name = cmd._parameters[0];

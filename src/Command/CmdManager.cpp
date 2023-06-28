@@ -73,24 +73,23 @@ void CmdManager::executeCommand(Client &sender, const Command &cmd)
 		default :
 					if (sender.isRegistrationDone())//인증완료된 아이는 아래의 에러메시지
 					{   sender.appendToSendBuffer(ERR_UNKNOWNCOMMAND(sender, cmd._commandName));	break;	}
-					else//인증 아직 안 됐으면
+					else//인증 아직 안 됐으면 인증 먼저 하라구
 					{   sender.appendToSendBuffer(ERR_NOTREGISTERED(sender));	break;   }
 	}
 }
 
-//삭제
 bool CmdManager::requireAuthed(Client &client)
 {
 	if (!client.isAuthed())
 	{
-		client.appendToSendBuffer(RPL_NONE("Authentication Failed. Try /connect"));
+		client.appendToSendBuffer(RPL_NONE("You have not authenticated"));
 		return false;
 	}
 	return true;
 }
 
-// requireRegistrationDone으로 변경
-bool CmdManager::requireNickUser(Client &client)
+// requireAuthed + requireNickUser
+bool CmdManager::requireRegistrationDone(Client &client)
 {
 	if (!client.isRegistrationDone())
 	{

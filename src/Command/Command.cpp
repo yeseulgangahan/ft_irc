@@ -10,13 +10,13 @@ Command::Command(const std::string& wholeString) : _wholeString(wholeString)
     else
         _hasTrail = false;
 
-    std::vector<std::string> tmpVector = ftSplit(wholeString.substr(0, pos), " ");
+    std::vector<std::string> tmpVector = ftSplit(wholeString.substr(0, pos), " ");//트레일링 전까지만 스페이스로 스플릿
 
     _commandName = tmpVector[0];
     _parameters = std::vector<std::string>(tmpVector.begin() + 1, tmpVector.end());
 
     if (_hasTrail)
-        _trail = wholeString.substr(pos + 2);
+        _trail = wholeString.substr(pos + 2);// 첫 : 다음부터는 트레일링으로 취급
 }
 
 bool Command::hasTrailing(void) const { return (_hasTrail); }

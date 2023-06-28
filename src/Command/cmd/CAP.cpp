@@ -12,7 +12,7 @@ static void capEND(Client &sender)
 	if (sender.isAuthed() && sender.isNicknameSetted() && sender.isUserSetted())
 	{
 		sender.setIsRegistrationDone();//등록 종료
-		sender.appendToSendBuffer("Registration Success!");//인증: 패스워드, 등록: 패스 닉 유저
+		sender.appendToSendBuffer("** Registration Success **");//인증: 패스워드, 등록: 패스 닉 유저
 		sender.appendToSendBuffer(RPL_WELCOME(sender));
 		sender.appendToSendBuffer(RPL_YOURHOST(sender));
 		// sender.appendToSendBuffer(RPL_CREATED(sender));
@@ -21,7 +21,7 @@ static void capEND(Client &sender)
 	}
 	else
 	{
-		sender.appendToSendBuffer("Registration Fail");
+		sender.appendToSendBuffer("** Registration Fail **");
 		throw std::exception();
 	}
 }

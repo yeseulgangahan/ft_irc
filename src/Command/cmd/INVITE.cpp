@@ -4,7 +4,7 @@
 //INVITE nick #channel
 void CmdManager::invite(Client& sender, const Command& cmd)
 {
-	if (!requireAuthed(sender) && !requireNickUser(sender) && \
+	if (!requireRegistrationDone(sender) && \
 		!requireEnoughParams(sender, cmd, 2, 3))
 		return;
 

@@ -35,8 +35,7 @@ static bool is_channel(const std::string &reicieve)
 
 void CmdManager::privmsg(Client& client, const Command &cmd)
 {
-	if (!requireAuthed(client)) return;
-	if (!requireNickUser(client)) return;
+	if (!requireRegistrationDone(client)) return;
 	if (!require_valid_param(client, cmd, *this, recv_reply)) return;
 	
 	std::vector<std::string> targets = parse_targets(cmd);
@@ -51,7 +50,7 @@ void CmdManager::privmsg(Client& client, const Command &cmd)
 
 void CmdManager::notice(Client &sender, const Command& cmd)
 {
-	if (!sender.isAuthed()) return;
+	if (!requireAuthed(sender)) return;
 	if (!sender.isUserSetted() || !sender.isNicknameSetted()) return;
 	if (!require_valid_param(sender, cmd, *this, not_recv_reply)) return;
 	std::vector<std::string> targets = parse_targets(cmd);

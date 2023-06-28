@@ -30,7 +30,7 @@ const std::string serverName = "ft_IRC";
 #define ERR_PASSWDMISMATCH(sender) RPL_NICK_MSG(sender, "464", "", "Password incorrect")
 
 // NICK
-#define ERR_ERRONEUSNICKNAME(sender) RPL_NICK_MSG(sender, "432", "", "Error one use nickname")
+#define ERR_ERRONEUSNICKNAME(sender) RPL_NICK_MSG(sender, "432", "", "Erroneus nickname")
 #define ERR_NICKNAMEINUSE(sender, new_nick) RPL_NICK_MSG(sender, "433", new_nick, "Nickname is already in use")
 #define ERR_NOSUCHNICK(sender, targetNick) RPL_NICK_MSG(sender, "401", targetNick, "No such nick")
 #define RPL_NICK_MSG(sender, command, parameters, trailing)	REPLY(serverName, command, sender.getNick() + ((std::string)parameters == "" ? (std::string)"" : (" " + (std::string)parameters)), trailing)

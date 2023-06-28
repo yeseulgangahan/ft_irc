@@ -15,7 +15,7 @@
 
 # define RESET "\033[0m"
 # define GREEN "\033[0;32m"
-# define BLUE "\033[0;34m"
+# define BLUE "\033[0;94m"
 # define YELLOW "\033[0;33m"
 
 
@@ -64,7 +64,7 @@ class Client
 		//sendBuffer 관련
 		void appendToSendBuffer(const std::string &s);
 		void sendMessages();
-		
+
 		Client();
 		Client(int fd);
 		~Client();

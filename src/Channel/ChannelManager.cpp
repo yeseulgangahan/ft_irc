@@ -2,28 +2,28 @@
 
 channelIter ChannelManager::getChannelIterator(std::string channelName) const
 {
-	for(channelIter it = channels.begin(); it != channels.end(); it++)
+	for(channelIter it = _channels.begin(); it != _channels.end(); it++)
 		if (it->getName() == channelName)
 			return it;
-	return channels.end();
+	return _channels.end();
 }
 
 bool ChannelManager::isChannelExist(std::string channelName) const
 {
-	return getChannelIterator(channelName) != channels.end();
+	return getChannelIterator(channelName) != _channels.end();
 }
 
 Channel& ChannelManager::getChannel(std::string channelName) const
 {
 	channelIter ch = getChannelIterator(channelName);
-	if (ch == channels.end())
+	if (ch == _channels.end())
 		throw std::logic_error("must not use ChanndlManager::find_must_exist(channelName) when not exist");
 	return const_cast<Channel&>(*ch);
 }
 
 std::set<Channel> ChannelManager::getChannels() const 
 {
-	return channels;
+	return _channels;
 }
 
 //addClient에 해당하는 채널매니저의 동작: add participant
@@ -36,14 +36,14 @@ void ChannelManager::addClient(const Command& cmd, Client &client, const std::ve
             if (isChannelExist(channelList[i]))//존재하는 채널이면
                 getChannel(channelList[i]).addMember(cmd, client, ch_pass[i]);//그 채널에 유저 추가
             else
-                channels.insert(Channel(cmd, channelList[i], client, ch_pass[i]));//새로운 채널을 생성해서 넣는다
+                _channels.insert(Channel(cmd, channelList[i], client, ch_pass[i]));//새로운 채널을 생성해서 넣는다
         }
 	}
 }
 
 void ChannelManager::removeTerminatedClient(Client &client)
 {
-	for(channelIter channelIter = channels.begin(); channelIter != channels.end(); channelIter++)
+	for(channelIter channelIter = _channels.begin(); channelIter != _channels.end(); channelIter++)
 	{
 		Channel &channel = const_cast<Channel&>(*channelIter);
 
@@ -96,31 +96,31 @@ void ChannelManager::broadcastToChannel(const Command &cmd, Client &sender, cons
 	getChannel(channel_name).broadcastExceptSender(sender,  REP_CMD(sender, cmd));
 }
 
-
-// ?? 아래 두 함수 합칠 예정
-// NICK, QUIT에서 호출된다 뭔가 이상함..
-
-std::set<Client> ChannelManager::get_same_channel_clients(Client&sender)
+// NICK, QUIT에서 사용된다
+void ChannelManager::replyToAllPeerClients(Client &sender, const Command &cmd)// 같은 채널에 속한 사람들에게 다 알려주기 (나 빼고)
 {
-	std::set<Client> clients;
-	std::set<Channel> channels = getChannels();
-	for(channelIter it = channels.begin(); it != channels.end(); it++)
+	std::vector<int> peerClients;//같은 클라이언트에게 여러 번 보내지 않도록 한 번 보내면 여기에 저장
+
+	for(channelIter channelIter = _channels.begin(); channelIter != _channels.end(); channelIter++)
 	{
-		const Channel &channel = *it;
-		if (channel.isMember(sender))
-			clients.insert(channel.getMembers().begin(), channel.getMembers().end());
+		if ((*channelIter).isMember(sender))//내가 속한 채널이다!
+		{
+			//클라이언트 돌아가면서
+			const std::set<Client> members = (*channelIter).getMembers();
+			for (clientIter clientIter = members.begin(); clientIter != members.end(); clientIter++)
+			{
+				if ((std::find(peerClients.begin(), peerClients.end(), clientIter->getFd()) == peerClients.end()) && //아직 peer client에 저장 안했다
+				(*clientIter) != sender)//내가 아닌 거면
+				{
+					//벡터에 기록하고 샌드
+					peerClients.push_back(clientIter->getFd());
+					std::string message = REP_CMD(sender, cmd);
+					message += "\r\n";
+					send(clientIter->getFd(), message.c_str(), message.length(), 0);
+					std::cout << BLUE << "To Client " << clientIter->getNick() << " " << RESET << message <<std::endl;
+				}
+			}
+		}
 	}
-	return clients;
 }
 
-void ChannelManager::cmdReplyToSameChannel(Client &sender, const Command &cmd)
-{
-	const std::set<Client> &receivers = get_same_channel_clients(sender);
-	for (clientIter it = receivers.begin(); it != receivers.end(); ++it)
-	{
-		Client receiver = *it;
-    	if (receiver == sender)
-			continue;
-		receiver.appendToSendBuffer(REP_CMD(sender, cmd));
-	}
-}

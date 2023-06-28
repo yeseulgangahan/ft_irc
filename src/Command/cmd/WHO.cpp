@@ -17,7 +17,7 @@ static void send_who_reply(Client &sender, Channel &channel)
 
 void CmdManager::who(Client &sender, const Command &cmd)
 {
-	if (!requireAuthed(sender) && !requireNickUser(sender) &&
+	if (!requireRegistrationDone(sender) &&
 		!requireEnoughParams(sender, cmd, 1, 2) &&
 		!channelManager.requireExistChannel(sender, channel_name(cmd)))
 		return;

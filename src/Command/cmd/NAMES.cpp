@@ -10,7 +10,7 @@
 // void CmdManager::names(Client &client, const Command& cmd)
 // {
 // 	if (!requireAuthed(client)) return;
-// 	if (!requireNickUser(client)) return;
+// 	if (!requireRegistrationDone(client)) return;
 // 	if (!requireEnoughParams(client, cmd, 0, 2)) return;
 // 	if (cmd._parameters.size() == 0)
 // 		names_all_channel(client);
