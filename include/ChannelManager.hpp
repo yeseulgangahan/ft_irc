@@ -16,7 +16,7 @@ class ChannelManager
 	bool isChannelExist(const std::string& channelName) const;
 
 	// 합칠 예정
-	std::set<Client> get_same_channel_clients(Client&sender);
+	std::set<Client> get_same_channel_clients(Client& sender);
 
 public:
 	//getter
