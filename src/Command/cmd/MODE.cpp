@@ -1,5 +1,6 @@
 #include "../../../include/CmdHandler.hpp"
 #include "../../../include/Mode.hpp"
+#include <iterator>
 
 void CmdHandler::modeInvite(Channel &channel, Client &sender, const Command &cmd)
 {
@@ -73,7 +74,16 @@ void CmdHandler::modeState(Channel &channel, Client &sender)
 	sender.appendToSendBuffer(RPL_CHANNELMODEIS(sender, channel, channel.getModeString(), ""));
 }
 
-void CmdHandler::mode(Client &sender, const Command &cmd)
+void CmdHandler::rmOverlaps(std::string& s)
+{
+	std::sort(s.begin(), s.end());
+
+	s.resize(	std::distance(	s.begin() + 1, std::unique(s.begin() + 1, s.end())	)	);
+	std::cout << "s:" << s << std::endl;
+}
+
+
+void CmdHandler::mode(Client &sender, Command &cmd)
 {
 	if (!requireAuthed(sender))
 		return;
@@ -95,8 +105,14 @@ void CmdHandler::mode(Client &sender, const Command &cmd)
 	if (cmd._parameters.size() == 1)
 		modeState(channel, sender);
 	else if (cmd._parameters[1][0] == '+')
+	{
+		rmOverlaps(cmd._parameters[1]);
 		plusOption(channel, sender, cmd);
+	}
 	else if (cmd._parameters[1][0] == '-')
+	{
+		rmOverlaps(cmd._parameters[1]);
 		minusOption(channel, sender, cmd);
+	}
 }
 // MODE #channel option [target_user]
