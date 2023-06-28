@@ -64,8 +64,8 @@ void Channel::modeKeyAdd(const Command &cmd, Client &sender, const std::string &
 {
     if (!requireOperator(sender))
         return;
-    _password = new_pass;
     _modeKey = true;
+    _password = new_pass;
     broadcast(sender,  REP_CMD(sender, cmd));
 }
 
@@ -73,8 +73,8 @@ void Channel::modeKeyRemove(const Command &cmd, Client &sender)
 {
     if (!requireOperator(sender))
         return;
-    _password = "";
     _modeKey = false;
+    _password = "";
     broadcast(sender,  REP_CMD(sender, cmd));
 }
 
