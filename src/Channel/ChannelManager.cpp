@@ -1,6 +1,6 @@
 #include "../../include/ChannelManager.hpp"
 
-channelIter ChannelManager::getChannelIterator(std::string channelName) const
+channelIter ChannelManager::getChannelIterator(const std::string& channelName) const
 {
 	for(channelIter it = channels.begin(); it != channels.end(); it++)
 		if (it->getName() == channelName)
@@ -8,12 +8,12 @@ channelIter ChannelManager::getChannelIterator(std::string channelName) const
 	return channels.end();
 }
 
-bool ChannelManager::isChannelExist(std::string channelName) const
+bool ChannelManager::isChannelExist(const std::string& channelName) const
 {
 	return getChannelIterator(channelName) != channels.end();
 }
 
-Channel& ChannelManager::getChannel(std::string channelName) const
+Channel& ChannelManager::getChannel(const std::string& channelName) const
 {
 	channelIter ch = getChannelIterator(channelName);
 	if (ch == channels.end())

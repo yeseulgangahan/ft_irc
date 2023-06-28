@@ -12,15 +12,15 @@ class ChannelManager
 	std::set<Channel> channels;
 	
 	//getter
-	channelIter getChannelIterator(std::string channelName) const;
-	bool isChannelExist(std::string channelName) const;
+	channelIter getChannelIterator(const std::string& channelName) const;
+	bool isChannelExist(const std::string& channelName) const;
 
 	// 합칠 예정
 	std::set<Client> get_same_channel_clients(Client&sender);
 
 public:
 	//getter
-	Channel& getChannel(std::string channelName) const;
+	Channel& getChannel(const std::string& channelName) const;
 	std::set<Channel> getChannels() const;
 
 	// client 관련	

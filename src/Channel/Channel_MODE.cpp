@@ -99,7 +99,7 @@ static bool checkDigit(std::string string)
 	return (true);
 }
 
-void Channel::modeLimitAdd(const Command &cmd, Client &sender, const std::string &string)
+void Channel::modeLimitAdd(const Command& cmd, Client& sender, const std::string& string)
 {
     if (!requireOperator(sender))
         return;
@@ -113,7 +113,7 @@ void Channel::modeLimitAdd(const Command &cmd, Client &sender, const std::string
     broadcast(sender, REP_CMD(sender, cmd));
 }
 
-void Channel::modeLimitRemove(const Command &cmd, Client &sender)
+void Channel::modeLimitRemove(const Command& cmd, Client& sender)
 {
     if (!requireOperator(sender))
         return;

@@ -120,7 +120,7 @@ std::string Channel::getModeString()
     return mode;
 }
 
-std::string Channel::getMembershipString(const Client&client) const
+std::string Channel::getMembershipString(const Client& client) const
 {
     if (!isMember(client))
         throw std::runtime_error("getMembershipString must member");
@@ -160,7 +160,7 @@ void Channel::removeMemberCheckOperator(Client &target, const std::string &chann
     }
 }
 
-void Channel::addMember(const Command& cmd, Client& sender, const std::string & pass)
+void Channel::addMember(const Command& cmd, Client& sender, const std::string& pass)
 {
     if (isMember(sender)) return ;
     if (_modeInvite && (_invited.find(sender) == _invited.end()))
