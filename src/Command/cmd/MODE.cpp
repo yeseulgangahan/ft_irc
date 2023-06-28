@@ -1,5 +1,6 @@
 #include "../../../include/CmdHandler.hpp"
 #include "../../../include/Mode.hpp"
+#include <iterator>
 
 void CmdHandler::modeInvite(Channel &channel, Client &sender, const Command &cmd)
 {
@@ -78,7 +79,6 @@ void CmdHandler::rmOverlaps(std::string& s)
 	std::sort(s.begin(), s.end());
 
 	s.resize(	std::distance(	s.begin(), std::unique(s.begin() + 1, s.end()))	);
-	std::cout << "s:" << s << std::endl;
 }
 
 void CmdHandler::mode(Client &sender, Command &cmd)
@@ -89,9 +89,12 @@ void CmdHandler::mode(Client &sender, Command &cmd)
 		return;
 	if (!requireEnoughParams(sender, cmd, 1))
 		return;
-	if (cmd._parameters[0] == "" || cmd._parameters[0][0] != '#' || cmd._parameters[0] == "#")
-		return; 
+
+	// user관련 모드는 처리 안 함
+	if (clientHandler.isClientExistByNick(cmd._parameters[0]))
+		return ;
 	
+	// valid한 채널인지 확인할 필요 없음. 있는 user가 아니면 채널이라고 가정하고, channel도 아니면 없는 채널이라고 답장해줌 (상용과 비슷)
 	if (!channelHandler.requireExistChannel(sender, cmd._parameters[0]))
 		return;
 
@@ -102,7 +105,6 @@ void CmdHandler::mode(Client &sender, Command &cmd)
 	else if (cmd._parameters[1][0] == '+')
 	{
 		rmOverlaps(cmd._parameters[1]);
-		std::cout << cmd._parameters[1] << std::endl;
 		plusOption(channel, sender, cmd);
 	}
 	else if (cmd._parameters[1][0] == '-')

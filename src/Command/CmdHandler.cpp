@@ -122,7 +122,7 @@ bool CmdHandler::requireEnoughParams(Client &sender, const Command& cmd, size_t 
 void CmdHandler::plusOption(Channel &channel, Client &sender, const Command &cmd)
 {
 	int no_arg = 0;
-	for (size_t i = 1; i < cmd._parameters[1].size(); i ++)
+	for (size_t i = 1; i < cmd._parameters[1].size(); i++)
 	{
 		switch (cmd._parameters[1][i])
 		{
