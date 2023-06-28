@@ -95,15 +95,12 @@ void CmdManager::modeState(Channel &channel, Client &sender)
 
 void CmdManager::mode(Client &sender, const Command &cmd)
 {
-	if (!requireAuthed(sender))
-		return;
-	if (!requireNickUser(sender))
-		return;
-	if (!requireEnoughParams(sender, cmd, 1))
-		return;
-	if (cmd._parameters[0] == "" || cmd._parameters[0][0] != '#' || cmd._parameters[0] == "#")
-		return; 
-	
+	if (!requireAuthed(sender)) return;
+	if (!requireNickUser(sender)) return;
+	if (!requireEnoughParams(sender, cmd, 1)) return;
+	if (cmd._parameters[0] == "" || cmd._parameters[0][0] != '#' || \
+		cmd._parameters[0] == "#") return;
+
 	if (!channelManager.requireExistChannel(sender, cmd._parameters[0]))
 		return;
 

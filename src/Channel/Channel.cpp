@@ -186,7 +186,9 @@ void Channel::addMember(const Command& cmd, Client& sender, const std::string & 
 
 void Channel::setTopic(const Command& cmd, Client &sender, const std::string &topic)
 {
-    if (_modeTopic && !requireOperator(sender)) return;
+    if (_modeTopic && !requireOperator(sender))
+        return;
+
     _topic = topic;
     sender.appendToSendBuffer(getTopicReplyString(sender));
     broadcastExceptSender(sender,  REP_CMD(sender, cmd));

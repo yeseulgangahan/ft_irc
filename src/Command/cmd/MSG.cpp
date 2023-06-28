@@ -54,7 +54,9 @@ void CmdManager::notice(Client &sender, const Command& cmd)
 	if (!sender.isAuthed()) return;
 	if (!sender.isUserSetted() || !sender.isNicknameSetted()) return;
 	if (!require_valid_param(sender, cmd, *this, not_recv_reply)) return;
+
 	std::vector<std::string> targets = parse_targets(cmd);
+
 	for (size_t i = 0; i < targets.size(); i++)
 	{
 		if (is_channel(targets[i]))

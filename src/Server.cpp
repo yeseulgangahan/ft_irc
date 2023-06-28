@@ -88,7 +88,7 @@ void Server::addNewPoll(int socketFd)
 
 void Server::PollLoop(void)
 {
-	int flag = 1;
+	int flag = true;
 
 	while (1)
 	{
@@ -113,7 +113,7 @@ void Server::PollLoop(void)
 				if (_pollFds[i].revents & POLLOUT && flag)
 					_clientManager.getClient(_pollFds[i].fd).sendMessages();
 				else if (!flag)
-					flag = 1;
+					flag = true;
 			}
 		}
 	}
