@@ -46,26 +46,6 @@ void CmdHandler::modeTopic(Channel &channel, Client &sender, const Command &cmd)
 		throw std::logic_error("");
 }
 
-void CmdHandler::modeKey(Channel &channel, Client &sender, const Command &cmd)
-{
-	if (!requireEnoughParams(sender, cmd, 2, 6))
-		return;
-	std::string flag = getFlag(cmd);
-	if (flag == MODE_K)
-		channel.modeKey(sender);
-	else if (flag == MODE_K_ADD)
-	{
-		if (!requireEnoughParams(sender, cmd, 3, 6))
-			return;
-		channel.modeKeyAdd(cmd, sender, cmd._parameters[2]);
-	}
-	else if (flag == MODE_K_REM)
-	{
-		channel.modeKeyRemove(cmd, sender);
-	}
-	else
-		throw std::logic_error("");
-}
 
 void CmdHandler::modeLimit(Channel &channel, Client &sender, const Command &cmd)
 {

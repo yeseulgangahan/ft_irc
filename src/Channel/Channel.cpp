@@ -246,6 +246,7 @@ void Channel::showTopic(Client &sender)
 
 void Channel::addInvitedList(const Command &cmd, Client &sender, Client& target)
 {
+    if (!requireSenderOnChannel(sender)) return;
 	if (!requireOperator(sender)) return;
 	if (isMember(target))
 	{

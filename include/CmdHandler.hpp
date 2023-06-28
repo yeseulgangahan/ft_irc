@@ -31,7 +31,6 @@ class CmdHandler
 		void modeInvite(Channel &channel, Client&sender, const Command &cmd);
 		void modeOperator(Channel &channel, Client&sender, const Command &cmd);
 		void modeTopic(Channel &channel, Client&sender, const Command &cmd);
-		void modeKey(Channel &channel, Client&sender, const Command &cmd);
 		void modeLimit(Channel &channel, Client&sender, const Command &cmd);
 		void modeState(Channel &channel, Client&sender);
 		void sendQuitMessage(Client&sender, const Command &cmd);
