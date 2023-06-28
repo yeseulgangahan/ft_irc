@@ -61,6 +61,16 @@ bool Channel::requireSenderOnChannel(Client& sender) const
     return true;
 }
 
+bool Channel::requirePassParameter(Client &sender, const std::string &new_pass) const
+{
+	if (new_pass.empty())
+	{
+		sender.appendToSendBuffer(ERR_INVALIDMODEPARAM((*this)));
+		return false;
+	}
+	return true;
+}
+
 std::string Channel::getName() const
 {
     return _name;

@@ -62,6 +62,8 @@ void Channel::modeKey(Client &sender)
 
 void Channel::modeKeyAdd(const Command &cmd, Client &sender, const std::string &new_pass)
 {
+	if (!requirePassParameter(sender, new_pass))
+		return;
     if (!requireOperator(sender))
         return;
     _modeKey = true;
