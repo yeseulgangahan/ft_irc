@@ -3,8 +3,7 @@
 
 ## Features
 - IRC 클라이언트인 IRSSI에 최적화
-- 동시에 다수의 클라이언트 처리
-- 인증
+- 인증 프로세스
 - nickname, username 설정
 - 채널 생성, 가입, 실시간 채팅, 멤버 관리, 모드 설정
 - private message 송수신
@@ -14,17 +13,17 @@
 - port: irc서버가 대기할 포트 번호입니다.
 - password: irc클라이언트가 연결 시도 시 요구할 비밀번호입니다.
 
+### Connect to the server with IRSSI
+```
+irssi
+/connect 127.0.0.1 <port> <password>
+```
+
 ### Connect to the server with a Netcat
 ```
 PASS <password>
 USER <username> 0 * <realname>
 NICK <nickname>
-```
-
-### Connect to the server with IRSSI
-```
-irssi
-/connect 127.0.0.1 <port> <password>
 ```
 
 ## Commands
