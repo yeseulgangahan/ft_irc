@@ -54,4 +54,4 @@ NICK <nickname>
 <img width="533" alt="image" src="https://github.com/yeseulgangahan/ft_irc/assets/88709878/1cb2482b-e658-4324-b185-e4f6c360f52b">
 
 ## Notion Post
-프로젝트를 진행하면서 공부한 내용과 질문을 [작은 IRC 서버를 위한 개념들](https://probable-perch-892.notion.site/IRC-f62548fd0d374caf85fe1e6103c4d980?pvs=4)에 정리했습니다.
+프로젝트를 진행하면서 생긴 질문과 공부한 내용을 [작은 IRC 서버를 위한 개념들](https://probable-perch-892.notion.site/IRC-f62548fd0d374caf85fe1e6103c4d980?pvs=4)에 정리했습니다.
