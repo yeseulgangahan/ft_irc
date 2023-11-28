@@ -13,13 +13,13 @@
 - port: irc서버가 대기할 포트 번호입니다.
 - password: irc클라이언트가 연결 시도 시 요구할 비밀번호입니다.
 
-### Connect to the server with IRSSI
+### IRSSI로 서버에 연결하기
 ```
 irssi
 /connect 127.0.0.1 <port> <password>
 ```
 
-### Connect to the server with a Netcat
+### Netcat으로 서버에 연결하기
 ```
 PASS <password>
 USER <username> 0 * <realname>
@@ -54,4 +54,4 @@ NICK <nickname>
 <img width="533" alt="image" src="https://github.com/yeseulgangahan/ft_irc/assets/88709878/1cb2482b-e658-4324-b185-e4f6c360f52b">
 
 ## Notion Post
-코드에 대한 자세한 설명은 [ft_irc에 대한 노트](https://probable-perch-892.notion.site/ft_irc-3820bd2af9eb4d56b73439ae3b4bb09b?pvs=4)에 있습니다.
+프로젝트를 진행하면서 공부한 내용과 질문을 [작은 IRC 서버를 위한 개념들](https://probable-perch-892.notion.site/IRC-f62548fd0d374caf85fe1e6103c4d980?pvs=4)에 정리했습니다.
